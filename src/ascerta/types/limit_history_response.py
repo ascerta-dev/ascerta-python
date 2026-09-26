@@ -1,14 +1,16 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Optional
-from datetime import datetime
-from typing_extensions import Literal
-
 from .._models import BaseModel
+
+from typing import Optional
+
 from .total_cost_data import TotalCostData
 
-__all__ = ["LimitHistoryResponse", "LimitHistory"]
+from datetime import datetime
 
+from typing_extensions import Literal
+
+__all__ = ["LimitHistoryResponse", "LimitHistory"]
 
 class LimitHistory(BaseModel):
     limit_id: Optional[str] = None
@@ -22,7 +24,6 @@ class LimitHistory(BaseModel):
     limit_type: Optional[Literal["block", "allow"]] = None
 
     max: Optional[float] = None
-
 
 class LimitHistoryResponse(BaseModel):
     limit_history: LimitHistory

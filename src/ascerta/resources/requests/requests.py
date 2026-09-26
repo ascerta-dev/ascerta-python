@@ -2,27 +2,18 @@
 
 from __future__ import annotations
 
-from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
-from .request_id.request_id import (
-    RequestIDResource,
-    AsyncRequestIDResource,
-    RequestIDResourceWithRawResponse,
-    AsyncRequestIDResourceWithRawResponse,
-    RequestIDResourceWithStreamingResponse,
-    AsyncRequestIDResourceWithStreamingResponse,
-)
-from .response_id.response_id import (
-    ResponseIDResource,
-    AsyncResponseIDResource,
-    ResponseIDResourceWithRawResponse,
-    AsyncResponseIDResourceWithRawResponse,
-    ResponseIDResourceWithStreamingResponse,
-    AsyncResponseIDResourceWithStreamingResponse,
-)
+
+from .request_id.request_id import RequestIDResource, AsyncRequestIDResource, RequestIDResourceWithRawResponse, AsyncRequestIDResourceWithRawResponse, RequestIDResourceWithStreamingResponse, AsyncRequestIDResourceWithStreamingResponse
+
+from ..._compat import cached_property
+
+from .response_id.response_id import ResponseIDResource, AsyncResponseIDResource, ResponseIDResourceWithRawResponse, AsyncResponseIDResourceWithRawResponse, ResponseIDResourceWithStreamingResponse, AsyncResponseIDResourceWithStreamingResponse
+
+from typing_extensions import Literal, overload
+from ..._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
 
 __all__ = ["RequestsResource", "AsyncRequestsResource"]
-
 
 class RequestsResource(SyncAPIResource):
     @cached_property
@@ -52,7 +43,6 @@ class RequestsResource(SyncAPIResource):
         """
         return RequestsResourceWithStreamingResponse(self)
 
-
 class AsyncRequestsResource(AsyncAPIResource):
     @cached_property
     def request_id(self) -> AsyncRequestIDResource:
@@ -81,7 +71,6 @@ class AsyncRequestsResource(AsyncAPIResource):
         """
         return AsyncRequestsResourceWithStreamingResponse(self)
 
-
 class RequestsResourceWithRawResponse:
     def __init__(self, requests: RequestsResource) -> None:
         self._requests = requests
@@ -93,7 +82,6 @@ class RequestsResourceWithRawResponse:
     @cached_property
     def response_id(self) -> ResponseIDResourceWithRawResponse:
         return ResponseIDResourceWithRawResponse(self._requests.response_id)
-
 
 class AsyncRequestsResourceWithRawResponse:
     def __init__(self, requests: AsyncRequestsResource) -> None:
@@ -107,7 +95,6 @@ class AsyncRequestsResourceWithRawResponse:
     def response_id(self) -> AsyncResponseIDResourceWithRawResponse:
         return AsyncResponseIDResourceWithRawResponse(self._requests.response_id)
 
-
 class RequestsResourceWithStreamingResponse:
     def __init__(self, requests: RequestsResource) -> None:
         self._requests = requests
@@ -119,7 +106,6 @@ class RequestsResourceWithStreamingResponse:
     @cached_property
     def response_id(self) -> ResponseIDResourceWithStreamingResponse:
         return ResponseIDResourceWithStreamingResponse(self._requests.response_id)
-
 
 class AsyncRequestsResourceWithStreamingResponse:
     def __init__(self, requests: AsyncRequestsResource) -> None:

@@ -6,7 +6,6 @@ from typing_extensions import TypedDict
 
 __all__ = ["CategoryResourcePriceUnitsParam"]
 
-
 class CategoryResourcePriceUnitsParam(TypedDict, total=False):
     input_price: float
 

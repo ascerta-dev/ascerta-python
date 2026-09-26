@@ -4,25 +4,27 @@ from __future__ import annotations
 
 import httpx
 
-from ...._types import Body, Query, Headers, NotGiven, not_given
-from ...._utils import path_template
-from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
-from ...._response import (
-    to_raw_response_wrapper,
-    to_streamed_response_wrapper,
-    async_to_raw_response_wrapper,
-    async_to_streamed_response_wrapper,
-)
-from ...._base_client import make_request_options
+
+from ...._compat import cached_property
+
+from ...._utils import path_template
+
 from ....types.use_cases.use_case_definition_response import UseCaseDefinitionResponse
+
+from ...._base_client import make_request_options
+
+from ...._types import NotGiven
+
+from ...._response import to_raw_response_wrapper, async_to_raw_response_wrapper, to_streamed_response_wrapper, async_to_streamed_response_wrapper
+
+from typing_extensions import Literal, overload
+from ...._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
 
 __all__ = ["VersionResource", "AsyncVersionResource"]
 
-
 class VersionResource(SyncAPIResource):
     """Use Cases"""
-
     @cached_property
     def with_raw_response(self) -> VersionResourceWithRawResponse:
         """
@@ -42,17 +44,15 @@ class VersionResource(SyncAPIResource):
         """
         return VersionResourceWithStreamingResponse(self)
 
-    def increment(
-        self,
-        use_case_name: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    def increment(self,
+    use_case_name: str,
+    *,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Increment a Use Case version
 
@@ -66,21 +66,17 @@ class VersionResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return self._post(
-            path_template(
-                "/api/v1/use_cases/definitions/{use_case_name}/increment_version", use_case_name=use_case_name
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            path_template("/api/v1/use_cases/definitions/{use_case_name}/increment_version", use_case_name=use_case_name),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-
 class AsyncVersionResource(AsyncAPIResource):
     """Use Cases"""
-
     @cached_property
     def with_raw_response(self) -> AsyncVersionResourceWithRawResponse:
         """
@@ -100,17 +96,15 @@ class AsyncVersionResource(AsyncAPIResource):
         """
         return AsyncVersionResourceWithStreamingResponse(self)
 
-    async def increment(
-        self,
-        use_case_name: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    async def increment(self,
+    use_case_name: str,
+    *,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Increment a Use Case version
 
@@ -124,17 +118,14 @@ class AsyncVersionResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return await self._post(
-            path_template(
-                "/api/v1/use_cases/definitions/{use_case_name}/increment_version", use_case_name=use_case_name
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            path_template("/api/v1/use_cases/definitions/{use_case_name}/increment_version", use_case_name=use_case_name),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
-
 
 class VersionResourceWithRawResponse:
     def __init__(self, version: VersionResource) -> None:
@@ -144,7 +135,6 @@ class VersionResourceWithRawResponse:
             version.increment,
         )
 
-
 class AsyncVersionResourceWithRawResponse:
     def __init__(self, version: AsyncVersionResource) -> None:
         self._version = version
@@ -153,7 +143,6 @@ class AsyncVersionResourceWithRawResponse:
             version.increment,
         )
 
-
 class VersionResourceWithStreamingResponse:
     def __init__(self, version: VersionResource) -> None:
         self._version = version
@@ -161,7 +150,6 @@ class VersionResourceWithStreamingResponse:
         self.increment = to_streamed_response_wrapper(
             version.increment,
         )
-
 
 class AsyncVersionResourceWithStreamingResponse:
     def __init__(self, version: AsyncVersionResource) -> None:

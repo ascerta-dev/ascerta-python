@@ -2,36 +2,45 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable, Optional
-from datetime import datetime
-
 import httpx
 
-from ..types import ingest_units_params
-from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import is_given, maybe_transform, strip_not_given, async_maybe_transform
-from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
-from .._response import (
-    to_raw_response_wrapper,
-    to_streamed_response_wrapper,
-    async_to_raw_response_wrapper,
-    async_to_streamed_response_wrapper,
-)
-from .._base_client import make_request_options
-from ..types.ingest_response import IngestResponse
+
+from .._compat import cached_property
+
 from ..types.bulk_ingest_response import BulkIngestResponse
-from ..types.function_call_info_param import FunctionCallInfoParam
+
+from .._utils import maybe_transform, strip_not_given, is_given, async_maybe_transform
+
+from typing import Iterable, Dict, Optional, Union
+
 from ..types.bulk_ingest_request_param import BulkIngestRequestParam
+
+from .._base_client import make_request_options
+
+from .._types import Omit, omit, NotGiven, not_given, SequenceNotStr
+
+from ..types.ingest_response import IngestResponse
+
 from ..types.shared_params.ingest_units import IngestUnits
+
+from datetime import datetime
+
 from ..types.ascerta_common_models_api_router_header_info_param import AscertaCommonModelsAPIRouterHeaderInfoParam
+
+from ..types.function_call_info_param import FunctionCallInfoParam
+
+from .._response import to_raw_response_wrapper, async_to_raw_response_wrapper, to_streamed_response_wrapper, async_to_streamed_response_wrapper
+
+from typing_extensions import Literal, overload
+from .._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
+from ..types import ingest_bulk_params
+from ..types import ingest_units_params
 
 __all__ = ["IngestResource", "AsyncIngestResource"]
 
-
 class IngestResource(SyncAPIResource):
     """Ingest Requests"""
-
     @cached_property
     def with_raw_response(self) -> IngestResourceWithRawResponse:
         """
@@ -51,17 +60,15 @@ class IngestResource(SyncAPIResource):
         """
         return IngestResourceWithStreamingResponse(self)
 
-    def bulk(
-        self,
-        *,
-        events: Iterable[BulkIngestRequestParam] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BulkIngestResponse:
+    def bulk(self,
+    *,
+    events: Iterable[BulkIngestRequestParam] | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> BulkIngestResponse:
         """
         Bulk Ingest
 
@@ -77,49 +84,45 @@ class IngestResource(SyncAPIResource):
         return self._post(
             "/api/v1/ingest/bulk",
             body=maybe_transform(events, Iterable[BulkIngestRequestParam]),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=BulkIngestResponse,
         )
 
-    def units(
-        self,
-        *,
-        category: str,
-        units: Dict[str, IngestUnits],
-        end_to_end_latency_ms: Optional[int] | Omit = omit,
-        event_timestamp: Union[str, datetime, None] | Omit = omit,
-        http_status_code: Optional[int] | Omit = omit,
-        properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
-        provider_request_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
-        provider_request_json: Optional[str] | Omit = omit,
-        provider_request_reasoning_json: Optional[str] | Omit = omit,
-        provider_response_function_calls: Optional[Iterable[FunctionCallInfoParam]] | Omit = omit,
-        provider_response_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
-        provider_response_id: Optional[str] | Omit = omit,
-        provider_response_json: Union[str, SequenceNotStr[str], None] | Omit = omit,
-        provider_uri: Optional[str] | Omit = omit,
-        resource: Optional[str] | Omit = omit,
-        time_to_first_completion_token_ms: Optional[int] | Omit = omit,
-        time_to_first_token_ms: Optional[int] | Omit = omit,
-        use_case_properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
-        account_name: str | Omit = omit,
-        limit_ids: str | Omit = omit,
-        disable_logging: str | Omit = omit,
-        resource_scope: str | Omit = omit,
-        use_case_id: str | Omit = omit,
-        use_case_name: str | Omit = omit,
-        use_case_step: str | Omit = omit,
-        use_case_version: int | Omit = omit,
-        user_id: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> IngestResponse:
+    def units(self,
+    *,
+    category: str,
+    units: Dict[str, IngestUnits],
+    end_to_end_latency_ms: Optional[int] | Omit = omit,
+    event_timestamp: Union[str, datetime, None] | Omit = omit,
+    http_status_code: Optional[int] | Omit = omit,
+    properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
+    provider_request_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
+    provider_request_json: Optional[str] | Omit = omit,
+    provider_request_reasoning_json: Optional[str] | Omit = omit,
+    provider_response_function_calls: Optional[Iterable[FunctionCallInfoParam]] | Omit = omit,
+    provider_response_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
+    provider_response_id: Optional[str] | Omit = omit,
+    provider_response_json: Union[str, SequenceNotStr[str], None] | Omit = omit,
+    provider_uri: Optional[str] | Omit = omit,
+    resource: Optional[str] | Omit = omit,
+    time_to_first_completion_token_ms: Optional[int] | Omit = omit,
+    time_to_first_token_ms: Optional[int] | Omit = omit,
+    use_case_properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
+    account_name: str | Omit = omit,
+    limit_ids: str | Omit = omit,
+    disable_logging: str | Omit = omit,
+    resource_scope: str | Omit = omit,
+    use_case_id: str | Omit = omit,
+    use_case_name: str | Omit = omit,
+    use_case_step: str | Omit = omit,
+    use_case_version: int | Omit = omit,
+    user_id: str | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> IngestResponse:
         """
         Ingest an Event
 
@@ -132,57 +135,45 @@ class IngestResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {
-            **strip_not_given(
-                {
-                    "xProxy-Account-Name": account_name,
-                    "xProxy-Limit-IDs": limit_ids,
-                    "xProxy-Logging-Disable": disable_logging,
-                    "xProxy-Resource-Scope": resource_scope,
-                    "xProxy-UseCase-ID": use_case_id,
-                    "xProxy-UseCase-Name": use_case_name,
-                    "xProxy-UseCase-Step": use_case_step,
-                    "xProxy-UseCase-Version": str(use_case_version) if is_given(use_case_version) else not_given,
-                    "xProxy-User-ID": user_id,
-                }
-            ),
-            **(extra_headers or {}),
-        }
+        extra_headers = { **strip_not_given({
+            "xProxy-Account-Name": account_name,
+            "xProxy-Limit-IDs": limit_ids,
+            "xProxy-Logging-Disable": disable_logging,
+            "xProxy-Resource-Scope": resource_scope,
+            "xProxy-UseCase-ID": use_case_id,
+            "xProxy-UseCase-Name": use_case_name,
+            "xProxy-UseCase-Step": use_case_step,
+            "xProxy-UseCase-Version": str(use_case_version) if is_given(use_case_version) else not_given,
+            "xProxy-User-ID": user_id,
+        }), **(extra_headers or {}) }
         return self._post(
             "/api/v1/ingest",
-            body=maybe_transform(
-                {
-                    "category": category,
-                    "units": units,
-                    "end_to_end_latency_ms": end_to_end_latency_ms,
-                    "event_timestamp": event_timestamp,
-                    "http_status_code": http_status_code,
-                    "properties": properties,
-                    "provider_request_headers": provider_request_headers,
-                    "provider_request_json": provider_request_json,
-                    "provider_request_reasoning_json": provider_request_reasoning_json,
-                    "provider_response_function_calls": provider_response_function_calls,
-                    "provider_response_headers": provider_response_headers,
-                    "provider_response_id": provider_response_id,
-                    "provider_response_json": provider_response_json,
-                    "provider_uri": provider_uri,
-                    "resource": resource,
-                    "time_to_first_completion_token_ms": time_to_first_completion_token_ms,
-                    "time_to_first_token_ms": time_to_first_token_ms,
-                    "use_case_properties": use_case_properties,
-                },
-                ingest_units_params.IngestUnitsParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            body=maybe_transform({
+                "category": category,
+                "units": units,
+                "end_to_end_latency_ms": end_to_end_latency_ms,
+                "event_timestamp": event_timestamp,
+                "http_status_code": http_status_code,
+                "properties": properties,
+                "provider_request_headers": provider_request_headers,
+                "provider_request_json": provider_request_json,
+                "provider_request_reasoning_json": provider_request_reasoning_json,
+                "provider_response_function_calls": provider_response_function_calls,
+                "provider_response_headers": provider_response_headers,
+                "provider_response_id": provider_response_id,
+                "provider_response_json": provider_response_json,
+                "provider_uri": provider_uri,
+                "resource": resource,
+                "time_to_first_completion_token_ms": time_to_first_completion_token_ms,
+                "time_to_first_token_ms": time_to_first_token_ms,
+                "use_case_properties": use_case_properties,
+            }, ingest_units_params.IngestUnitsParams),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=IngestResponse,
         )
 
-
 class AsyncIngestResource(AsyncAPIResource):
     """Ingest Requests"""
-
     @cached_property
     def with_raw_response(self) -> AsyncIngestResourceWithRawResponse:
         """
@@ -202,17 +193,15 @@ class AsyncIngestResource(AsyncAPIResource):
         """
         return AsyncIngestResourceWithStreamingResponse(self)
 
-    async def bulk(
-        self,
-        *,
-        events: Iterable[BulkIngestRequestParam] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BulkIngestResponse:
+    async def bulk(self,
+    *,
+    events: Iterable[BulkIngestRequestParam] | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> BulkIngestResponse:
         """
         Bulk Ingest
 
@@ -228,49 +217,45 @@ class AsyncIngestResource(AsyncAPIResource):
         return await self._post(
             "/api/v1/ingest/bulk",
             body=await async_maybe_transform(events, Iterable[BulkIngestRequestParam]),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=BulkIngestResponse,
         )
 
-    async def units(
-        self,
-        *,
-        category: str,
-        units: Dict[str, IngestUnits],
-        end_to_end_latency_ms: Optional[int] | Omit = omit,
-        event_timestamp: Union[str, datetime, None] | Omit = omit,
-        http_status_code: Optional[int] | Omit = omit,
-        properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
-        provider_request_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
-        provider_request_json: Optional[str] | Omit = omit,
-        provider_request_reasoning_json: Optional[str] | Omit = omit,
-        provider_response_function_calls: Optional[Iterable[FunctionCallInfoParam]] | Omit = omit,
-        provider_response_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
-        provider_response_id: Optional[str] | Omit = omit,
-        provider_response_json: Union[str, SequenceNotStr[str], None] | Omit = omit,
-        provider_uri: Optional[str] | Omit = omit,
-        resource: Optional[str] | Omit = omit,
-        time_to_first_completion_token_ms: Optional[int] | Omit = omit,
-        time_to_first_token_ms: Optional[int] | Omit = omit,
-        use_case_properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
-        account_name: str | Omit = omit,
-        limit_ids: str | Omit = omit,
-        disable_logging: str | Omit = omit,
-        resource_scope: str | Omit = omit,
-        use_case_id: str | Omit = omit,
-        use_case_name: str | Omit = omit,
-        use_case_step: str | Omit = omit,
-        use_case_version: int | Omit = omit,
-        user_id: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> IngestResponse:
+    async def units(self,
+    *,
+    category: str,
+    units: Dict[str, IngestUnits],
+    end_to_end_latency_ms: Optional[int] | Omit = omit,
+    event_timestamp: Union[str, datetime, None] | Omit = omit,
+    http_status_code: Optional[int] | Omit = omit,
+    properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
+    provider_request_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
+    provider_request_json: Optional[str] | Omit = omit,
+    provider_request_reasoning_json: Optional[str] | Omit = omit,
+    provider_response_function_calls: Optional[Iterable[FunctionCallInfoParam]] | Omit = omit,
+    provider_response_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]] | Omit = omit,
+    provider_response_id: Optional[str] | Omit = omit,
+    provider_response_json: Union[str, SequenceNotStr[str], None] | Omit = omit,
+    provider_uri: Optional[str] | Omit = omit,
+    resource: Optional[str] | Omit = omit,
+    time_to_first_completion_token_ms: Optional[int] | Omit = omit,
+    time_to_first_token_ms: Optional[int] | Omit = omit,
+    use_case_properties: Optional[Dict[str, Optional[str]]] | Omit = omit,
+    account_name: str | Omit = omit,
+    limit_ids: str | Omit = omit,
+    disable_logging: str | Omit = omit,
+    resource_scope: str | Omit = omit,
+    use_case_id: str | Omit = omit,
+    use_case_name: str | Omit = omit,
+    use_case_step: str | Omit = omit,
+    use_case_version: int | Omit = omit,
+    user_id: str | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> IngestResponse:
         """
         Ingest an Event
 
@@ -283,53 +268,42 @@ class AsyncIngestResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {
-            **strip_not_given(
-                {
-                    "xProxy-Account-Name": account_name,
-                    "xProxy-Limit-IDs": limit_ids,
-                    "xProxy-Logging-Disable": disable_logging,
-                    "xProxy-Resource-Scope": resource_scope,
-                    "xProxy-UseCase-ID": use_case_id,
-                    "xProxy-UseCase-Name": use_case_name,
-                    "xProxy-UseCase-Step": use_case_step,
-                    "xProxy-UseCase-Version": str(use_case_version) if is_given(use_case_version) else not_given,
-                    "xProxy-User-ID": user_id,
-                }
-            ),
-            **(extra_headers or {}),
-        }
+        extra_headers = { **strip_not_given({
+            "xProxy-Account-Name": account_name,
+            "xProxy-Limit-IDs": limit_ids,
+            "xProxy-Logging-Disable": disable_logging,
+            "xProxy-Resource-Scope": resource_scope,
+            "xProxy-UseCase-ID": use_case_id,
+            "xProxy-UseCase-Name": use_case_name,
+            "xProxy-UseCase-Step": use_case_step,
+            "xProxy-UseCase-Version": str(use_case_version) if is_given(use_case_version) else not_given,
+            "xProxy-User-ID": user_id,
+        }), **(extra_headers or {}) }
         return await self._post(
             "/api/v1/ingest",
-            body=await async_maybe_transform(
-                {
-                    "category": category,
-                    "units": units,
-                    "end_to_end_latency_ms": end_to_end_latency_ms,
-                    "event_timestamp": event_timestamp,
-                    "http_status_code": http_status_code,
-                    "properties": properties,
-                    "provider_request_headers": provider_request_headers,
-                    "provider_request_json": provider_request_json,
-                    "provider_request_reasoning_json": provider_request_reasoning_json,
-                    "provider_response_function_calls": provider_response_function_calls,
-                    "provider_response_headers": provider_response_headers,
-                    "provider_response_id": provider_response_id,
-                    "provider_response_json": provider_response_json,
-                    "provider_uri": provider_uri,
-                    "resource": resource,
-                    "time_to_first_completion_token_ms": time_to_first_completion_token_ms,
-                    "time_to_first_token_ms": time_to_first_token_ms,
-                    "use_case_properties": use_case_properties,
-                },
-                ingest_units_params.IngestUnitsParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            body=await async_maybe_transform({
+                "category": category,
+                "units": units,
+                "end_to_end_latency_ms": end_to_end_latency_ms,
+                "event_timestamp": event_timestamp,
+                "http_status_code": http_status_code,
+                "properties": properties,
+                "provider_request_headers": provider_request_headers,
+                "provider_request_json": provider_request_json,
+                "provider_request_reasoning_json": provider_request_reasoning_json,
+                "provider_response_function_calls": provider_response_function_calls,
+                "provider_response_headers": provider_response_headers,
+                "provider_response_id": provider_response_id,
+                "provider_response_json": provider_response_json,
+                "provider_uri": provider_uri,
+                "resource": resource,
+                "time_to_first_completion_token_ms": time_to_first_completion_token_ms,
+                "time_to_first_token_ms": time_to_first_token_ms,
+                "use_case_properties": use_case_properties,
+            }, ingest_units_params.IngestUnitsParams),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=IngestResponse,
         )
-
 
 class IngestResourceWithRawResponse:
     def __init__(self, ingest: IngestResource) -> None:
@@ -342,7 +316,6 @@ class IngestResourceWithRawResponse:
             ingest.units,
         )
 
-
 class AsyncIngestResourceWithRawResponse:
     def __init__(self, ingest: AsyncIngestResource) -> None:
         self._ingest = ingest
@@ -354,7 +327,6 @@ class AsyncIngestResourceWithRawResponse:
             ingest.units,
         )
 
-
 class IngestResourceWithStreamingResponse:
     def __init__(self, ingest: IngestResource) -> None:
         self._ingest = ingest
@@ -365,7 +337,6 @@ class IngestResourceWithStreamingResponse:
         self.units = to_streamed_response_wrapper(
             ingest.units,
         )
-
 
 class AsyncIngestResourceWithStreamingResponse:
     def __init__(self, ingest: AsyncIngestResource) -> None:

@@ -4,6 +4,5 @@ from ..._models import BaseModel
 
 __all__ = ["AscertaCommonModelsBudgetManagementCostDetailsBase"]
 
-
 class AscertaCommonModelsBudgetManagementCostDetailsBase(BaseModel):
     base: float

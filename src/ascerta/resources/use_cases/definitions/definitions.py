@@ -2,59 +2,47 @@
 
 from __future__ import annotations
 
-from typing import Optional
-from typing_extensions import Literal
-
 import httpx
 
-from .kpis import (
-    KpisResource,
-    AsyncKpisResource,
-    KpisResourceWithRawResponse,
-    AsyncKpisResourceWithRawResponse,
-    KpisResourceWithStreamingResponse,
-    AsyncKpisResourceWithStreamingResponse,
-)
-from .version import (
-    VersionResource,
-    AsyncVersionResource,
-    VersionResourceWithRawResponse,
-    AsyncVersionResourceWithRawResponse,
-    VersionResourceWithStreamingResponse,
-    AsyncVersionResourceWithStreamingResponse,
-)
-from ...._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ...._utils import path_template, maybe_transform, async_maybe_transform
-from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
-from ...._response import (
-    to_raw_response_wrapper,
-    to_streamed_response_wrapper,
-    async_to_raw_response_wrapper,
-    async_to_streamed_response_wrapper,
-)
-from .limit_config import (
-    LimitConfigResource,
-    AsyncLimitConfigResource,
-    LimitConfigResourceWithRawResponse,
-    AsyncLimitConfigResourceWithRawResponse,
-    LimitConfigResourceWithStreamingResponse,
-    AsyncLimitConfigResourceWithStreamingResponse,
-)
-from ....pagination import SyncCursorPage, AsyncCursorPage
-from ...._base_client import AsyncPaginator, make_request_options
-from ....types.use_cases import definition_list_params, definition_create_params, definition_update_params
+
+from .kpis import KpisResource, AsyncKpisResource, KpisResourceWithRawResponse, AsyncKpisResourceWithRawResponse, KpisResourceWithStreamingResponse, AsyncKpisResourceWithStreamingResponse
+
+from ...._compat import cached_property
+
+from .limit_config import LimitConfigResource, AsyncLimitConfigResource, LimitConfigResourceWithRawResponse, AsyncLimitConfigResourceWithRawResponse, LimitConfigResourceWithStreamingResponse, AsyncLimitConfigResourceWithStreamingResponse
+
+from .version import VersionResource, AsyncVersionResource, VersionResourceWithRawResponse, AsyncVersionResourceWithRawResponse, VersionResourceWithStreamingResponse, AsyncVersionResourceWithStreamingResponse
+
 from ....types.use_cases.use_case_definition_response import UseCaseDefinitionResponse
-from ....types.shared_params.ascerta_common_models_budget_management_create_limit_base import (
-    AscertaCommonModelsBudgetManagementCreateLimitBase,
-)
+
+from ...._utils import maybe_transform, path_template, async_maybe_transform
+
+from ...._base_client import make_request_options, AsyncPaginator
+
+from typing import Optional
+
+from ....types.shared_params.ascerta_common_models_budget_management_create_limit_base import AscertaCommonModelsBudgetManagementCreateLimitBase
+
+from ...._types import Omit, omit, NotGiven
+
+from typing_extensions import Literal
+
+from ....pagination import SyncCursorPage, AsyncCursorPage
+
+from ...._response import to_raw_response_wrapper, async_to_raw_response_wrapper, to_streamed_response_wrapper, async_to_streamed_response_wrapper
+
+from typing_extensions import Literal, overload
+from ...._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
+from ....types.use_cases import definition_create_params
+from ....types.use_cases import definition_update_params
+from ....types.use_cases import definition_list_params
+from ....types import shared
 
 __all__ = ["DefinitionsResource", "AsyncDefinitionsResource"]
 
-
 class DefinitionsResource(SyncAPIResource):
     """Use Cases"""
-
     @cached_property
     def kpis(self) -> KpisResource:
         """KPIs"""
@@ -89,21 +77,19 @@ class DefinitionsResource(SyncAPIResource):
         """
         return DefinitionsResourceWithStreamingResponse(self)
 
-    def create(
-        self,
-        *,
-        description: str,
-        name: str,
-        limit_config: Optional[AscertaCommonModelsBudgetManagementCreateLimitBase] | Omit = omit,
-        logging_enabled: Optional[bool] | Omit = omit,
-        system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    def create(self,
+    *,
+    description: str,
+    name: str,
+    limit_config: Optional[AscertaCommonModelsBudgetManagementCreateLimitBase] | Omit = omit,
+    logging_enabled: Optional[bool] | Omit = omit,
+    system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Create a new Use Case
 
@@ -122,33 +108,26 @@ class DefinitionsResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/use_cases/definitions",
-            body=maybe_transform(
-                {
-                    "description": description,
-                    "name": name,
-                    "limit_config": limit_config,
-                    "logging_enabled": logging_enabled,
-                    "system_integration": system_integration,
-                },
-                definition_create_params.DefinitionCreateParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            body=maybe_transform({
+                "description": description,
+                "name": name,
+                "limit_config": limit_config,
+                "logging_enabled": logging_enabled,
+                "system_integration": system_integration,
+            }, definition_create_params.DefinitionCreateParams),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-    def retrieve(
-        self,
-        use_case_name: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    def retrieve(self,
+    use_case_name: str,
+    *,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Get Use Case details
 
@@ -162,29 +141,27 @@ class DefinitionsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return self._get(
             path_template("/api/v1/use_cases/definitions/{use_case_name}", use_case_name=use_case_name),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-    def update(
-        self,
-        use_case_name: str,
-        *,
-        description: Optional[str] | Omit = omit,
-        logging_enabled: Optional[bool] | Omit = omit,
-        system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    def update(self,
+    use_case_name: str,
+    *,
+    description: Optional[str] | Omit = omit,
+    logging_enabled: Optional[bool] | Omit = omit,
+    system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Update a Use Case definition
 
@@ -202,37 +179,32 @@ class DefinitionsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return self._put(
             path_template("/api/v1/use_cases/definitions/{use_case_name}", use_case_name=use_case_name),
-            body=maybe_transform(
-                {
-                    "description": description,
-                    "logging_enabled": logging_enabled,
-                    "system_integration": system_integration,
-                },
-                definition_update_params.DefinitionUpdateParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            body=maybe_transform({
+                "description": description,
+                "logging_enabled": logging_enabled,
+                "system_integration": system_integration,
+            }, definition_update_params.DefinitionUpdateParams),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-    def list(
-        self,
-        *,
-        cursor: str | Omit = omit,
-        limit: int | Omit = omit,
-        sort_ascending: bool | Omit = omit,
-        use_case_name: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursorPage[UseCaseDefinitionResponse]:
+    def list(self,
+    *,
+    cursor: str | Omit = omit,
+    limit: int | Omit = omit,
+    sort_ascending: bool | Omit = omit,
+    use_case_name: str | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> SyncCursorPage[UseCaseDefinitionResponse]:
         """
         Get all Use Cases
 
@@ -247,36 +219,25 @@ class DefinitionsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/api/v1/use_cases/definitions",
-            page=SyncCursorPage[UseCaseDefinitionResponse],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "limit": limit,
-                        "sort_ascending": sort_ascending,
-                        "use_case_name": use_case_name,
-                    },
-                    definition_list_params.DefinitionListParams,
-                ),
-            ),
+            page = SyncCursorPage[UseCaseDefinitionResponse],
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
+                "cursor": cursor,
+                "limit": limit,
+                "sort_ascending": sort_ascending,
+                "use_case_name": use_case_name,
+            }, definition_list_params.DefinitionListParams)),
             model=UseCaseDefinitionResponse,
         )
 
-    def delete(
-        self,
-        use_case_name: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    def delete(self,
+    use_case_name: str,
+    *,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Delete a Use Case
 
@@ -290,19 +251,17 @@ class DefinitionsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return self._delete(
             path_template("/api/v1/use_cases/definitions/{use_case_name}", use_case_name=use_case_name),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-
 class AsyncDefinitionsResource(AsyncAPIResource):
     """Use Cases"""
-
     @cached_property
     def kpis(self) -> AsyncKpisResource:
         """KPIs"""
@@ -337,21 +296,19 @@ class AsyncDefinitionsResource(AsyncAPIResource):
         """
         return AsyncDefinitionsResourceWithStreamingResponse(self)
 
-    async def create(
-        self,
-        *,
-        description: str,
-        name: str,
-        limit_config: Optional[AscertaCommonModelsBudgetManagementCreateLimitBase] | Omit = omit,
-        logging_enabled: Optional[bool] | Omit = omit,
-        system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    async def create(self,
+    *,
+    description: str,
+    name: str,
+    limit_config: Optional[AscertaCommonModelsBudgetManagementCreateLimitBase] | Omit = omit,
+    logging_enabled: Optional[bool] | Omit = omit,
+    system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Create a new Use Case
 
@@ -370,33 +327,26 @@ class AsyncDefinitionsResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/use_cases/definitions",
-            body=await async_maybe_transform(
-                {
-                    "description": description,
-                    "name": name,
-                    "limit_config": limit_config,
-                    "logging_enabled": logging_enabled,
-                    "system_integration": system_integration,
-                },
-                definition_create_params.DefinitionCreateParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            body=await async_maybe_transform({
+                "description": description,
+                "name": name,
+                "limit_config": limit_config,
+                "logging_enabled": logging_enabled,
+                "system_integration": system_integration,
+            }, definition_create_params.DefinitionCreateParams),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-    async def retrieve(
-        self,
-        use_case_name: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    async def retrieve(self,
+    use_case_name: str,
+    *,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Get Use Case details
 
@@ -410,29 +360,27 @@ class AsyncDefinitionsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return await self._get(
             path_template("/api/v1/use_cases/definitions/{use_case_name}", use_case_name=use_case_name),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-    async def update(
-        self,
-        use_case_name: str,
-        *,
-        description: Optional[str] | Omit = omit,
-        logging_enabled: Optional[bool] | Omit = omit,
-        system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    async def update(self,
+    use_case_name: str,
+    *,
+    description: Optional[str] | Omit = omit,
+    logging_enabled: Optional[bool] | Omit = omit,
+    system_integration: Optional[Literal["none", "claude_code", "github_copilot"]] | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Update a Use Case definition
 
@@ -450,37 +398,32 @@ class AsyncDefinitionsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return await self._put(
             path_template("/api/v1/use_cases/definitions/{use_case_name}", use_case_name=use_case_name),
-            body=await async_maybe_transform(
-                {
-                    "description": description,
-                    "logging_enabled": logging_enabled,
-                    "system_integration": system_integration,
-                },
-                definition_update_params.DefinitionUpdateParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            body=await async_maybe_transform({
+                "description": description,
+                "logging_enabled": logging_enabled,
+                "system_integration": system_integration,
+            }, definition_update_params.DefinitionUpdateParams),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
 
-    def list(
-        self,
-        *,
-        cursor: str | Omit = omit,
-        limit: int | Omit = omit,
-        sort_ascending: bool | Omit = omit,
-        use_case_name: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[UseCaseDefinitionResponse, AsyncCursorPage[UseCaseDefinitionResponse]]:
+    def list(self,
+    *,
+    cursor: str | Omit = omit,
+    limit: int | Omit = omit,
+    sort_ascending: bool | Omit = omit,
+    use_case_name: str | Omit = omit,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> AsyncPaginator[UseCaseDefinitionResponse, AsyncCursorPage[UseCaseDefinitionResponse]]:
         """
         Get all Use Cases
 
@@ -495,36 +438,25 @@ class AsyncDefinitionsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/api/v1/use_cases/definitions",
-            page=AsyncCursorPage[UseCaseDefinitionResponse],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "limit": limit,
-                        "sort_ascending": sort_ascending,
-                        "use_case_name": use_case_name,
-                    },
-                    definition_list_params.DefinitionListParams,
-                ),
-            ),
+            page = AsyncCursorPage[UseCaseDefinitionResponse],
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
+                "cursor": cursor,
+                "limit": limit,
+                "sort_ascending": sort_ascending,
+                "use_case_name": use_case_name,
+            }, definition_list_params.DefinitionListParams)),
             model=UseCaseDefinitionResponse,
         )
 
-    async def delete(
-        self,
-        use_case_name: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> UseCaseDefinitionResponse:
+    async def delete(self,
+    use_case_name: str,
+    *,
+    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+    # The extra values given here take precedence over values defined on the client or passed to this method.
+    extra_headers: Headers | None = None,
+    extra_query: Query | None = None,
+    extra_body: Body | None = None,
+    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseDefinitionResponse:
         """
         Delete a Use Case
 
@@ -538,15 +470,14 @@ class AsyncDefinitionsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+          raise ValueError(
+            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
+          )
         return await self._delete(
             path_template("/api/v1/use_cases/definitions/{use_case_name}", use_case_name=use_case_name),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
+            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
             cast_to=UseCaseDefinitionResponse,
         )
-
 
 class DefinitionsResourceWithRawResponse:
     def __init__(self, definitions: DefinitionsResource) -> None:
@@ -583,7 +514,6 @@ class DefinitionsResourceWithRawResponse:
         """Use Cases"""
         return VersionResourceWithRawResponse(self._definitions.version)
 
-
 class AsyncDefinitionsResourceWithRawResponse:
     def __init__(self, definitions: AsyncDefinitionsResource) -> None:
         self._definitions = definitions
@@ -619,7 +549,6 @@ class AsyncDefinitionsResourceWithRawResponse:
         """Use Cases"""
         return AsyncVersionResourceWithRawResponse(self._definitions.version)
 
-
 class DefinitionsResourceWithStreamingResponse:
     def __init__(self, definitions: DefinitionsResource) -> None:
         self._definitions = definitions
@@ -654,7 +583,6 @@ class DefinitionsResourceWithStreamingResponse:
     def version(self) -> VersionResourceWithStreamingResponse:
         """Use Cases"""
         return VersionResourceWithStreamingResponse(self._definitions.version)
-
 
 class AsyncDefinitionsResourceWithStreamingResponse:
     def __init__(self, definitions: AsyncDefinitionsResource) -> None:

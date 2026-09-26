@@ -1,12 +1,12 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .._models import BaseModel
+
 from datetime import datetime
 
-from .._models import BaseModel
 from .shared.xproxy_result import XproxyResult
 
 __all__ = ["IngestResponse"]
-
 
 class IngestResponse(BaseModel):
     event_timestamp: datetime

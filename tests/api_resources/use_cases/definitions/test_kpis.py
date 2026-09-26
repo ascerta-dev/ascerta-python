@@ -2,27 +2,30 @@
 
 from __future__ import annotations
 
+from ascerta import Ascerta, AsyncAscerta
+
+from ascerta.types.use_cases.definitions import KpiCreateResponse, KpiRetrieveResponse, KpiUpdateResponse, KpiListResponse, KpiDeleteResponse
+
+from typing import cast, Any
+
+from ascerta.pagination import SyncCursorPage, AsyncCursorPage
+
 import os
-from typing import Any, cast
-
 import pytest
-
+import httpx
+from typing_extensions import get_args
+from respx import MockRouter
 from ascerta import Ascerta, AsyncAscerta
 from tests.utils import assert_matches_type
-from ascerta.pagination import SyncCursorPage, AsyncCursorPage
-from ascerta.types.use_cases.definitions import (
-    KpiListResponse,
-    KpiCreateResponse,
-    KpiDeleteResponse,
-    KpiUpdateResponse,
-    KpiRetrieveResponse,
-)
+from ascerta.types.use_cases.definitions import kpi_create_params
+from ascerta.types.use_cases.definitions import kpi_update_params
+from ascerta.types.use_cases.definitions import kpi_list_params
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
-
 class TestKpis:
-    parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=['loose', 'strict'])
+
 
     @parametrize
     def test_method_create(self, client: Ascerta) -> None:
@@ -32,7 +35,7 @@ class TestKpis:
             goal=0,
             kpi_type="boolean",
         )
-        assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+        assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
     @parametrize
     def test_method_create_with_all_params(self, client: Ascerta) -> None:
@@ -44,10 +47,11 @@ class TestKpis:
             kpi_id="kpi_id",
             kpi_name="kpi_name",
         )
-        assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+        assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
     @parametrize
     def test_raw_response_create(self, client: Ascerta) -> None:
+
         response = client.use_cases.definitions.kpis.with_raw_response.create(
             use_case_name="use_case_name",
             description="x",
@@ -56,9 +60,9 @@ class TestKpis:
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = response.parse()
-        assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+        assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
     @parametrize
     def test_streaming_response_create(self, client: Ascerta) -> None:
@@ -67,24 +71,24 @@ class TestKpis:
             description="x",
             goal=0,
             kpi_type="boolean",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = response.parse()
-            assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+            assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_path_params_create(self, client: Ascerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.create(
-                use_case_name="",
-                description="x",
-                goal=0,
-                kpi_type="boolean",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.create(
+              use_case_name="",
+              description="x",
+              goal=0,
+              kpi_type="boolean",
+          )
 
     @parametrize
     def test_method_retrieve(self, client: Ascerta) -> None:
@@ -92,47 +96,48 @@ class TestKpis:
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
-        assert_matches_type(KpiRetrieveResponse, kpi, path=["response"])
+        assert_matches_type(KpiRetrieveResponse, kpi, path=['response'])
 
     @parametrize
     def test_raw_response_retrieve(self, client: Ascerta) -> None:
+
         response = client.use_cases.definitions.kpis.with_raw_response.retrieve(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = response.parse()
-        assert_matches_type(KpiRetrieveResponse, kpi, path=["response"])
+        assert_matches_type(KpiRetrieveResponse, kpi, path=['response'])
 
     @parametrize
     def test_streaming_response_retrieve(self, client: Ascerta) -> None:
         with client.use_cases.definitions.kpis.with_streaming_response.retrieve(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = response.parse()
-            assert_matches_type(KpiRetrieveResponse, kpi, path=["response"])
+            assert_matches_type(KpiRetrieveResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_path_params_retrieve(self, client: Ascerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.retrieve(
-                kpi_id="kpi_id",
-                use_case_name="",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.retrieve(
+              kpi_id="kpi_id",
+              use_case_name="",
+          )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `kpi_id` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.retrieve(
-                kpi_id="",
-                use_case_name="use_case_name",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.retrieve(
+              kpi_id="",
+              use_case_name="use_case_name",
+          )
 
     @parametrize
     def test_method_update(self, client: Ascerta) -> None:
@@ -140,7 +145,7 @@ class TestKpis:
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
-        assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+        assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
     @parametrize
     def test_method_update_with_all_params(self, client: Ascerta) -> None:
@@ -151,54 +156,55 @@ class TestKpis:
             goal=0,
             kpi_name="kpi_name",
         )
-        assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+        assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
     @parametrize
     def test_raw_response_update(self, client: Ascerta) -> None:
+
         response = client.use_cases.definitions.kpis.with_raw_response.update(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = response.parse()
-        assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+        assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
     @parametrize
     def test_streaming_response_update(self, client: Ascerta) -> None:
         with client.use_cases.definitions.kpis.with_streaming_response.update(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = response.parse()
-            assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+            assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_path_params_update(self, client: Ascerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.update(
-                kpi_id="kpi_id",
-                use_case_name="",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.update(
+              kpi_id="kpi_id",
+              use_case_name="",
+          )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `kpi_id` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.update(
-                kpi_id="",
-                use_case_name="use_case_name",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.update(
+              kpi_id="",
+              use_case_name="use_case_name",
+          )
 
     @parametrize
     def test_method_list(self, client: Ascerta) -> None:
         kpi = client.use_cases.definitions.kpis.list(
             use_case_name="use_case_name",
         )
-        assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=["response"])
+        assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=['response'])
 
     @parametrize
     def test_method_list_with_all_params(self, client: Ascerta) -> None:
@@ -209,38 +215,39 @@ class TestKpis:
             limit=0,
             sort_ascending=True,
         )
-        assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=["response"])
+        assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=['response'])
 
     @parametrize
     def test_raw_response_list(self, client: Ascerta) -> None:
+
         response = client.use_cases.definitions.kpis.with_raw_response.list(
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = response.parse()
-        assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=["response"])
+        assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=['response'])
 
     @parametrize
     def test_streaming_response_list(self, client: Ascerta) -> None:
         with client.use_cases.definitions.kpis.with_streaming_response.list(
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = response.parse()
-            assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=["response"])
+            assert_matches_type(SyncCursorPage[KpiListResponse], kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_path_params_list(self, client: Ascerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.list(
-                use_case_name="",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.list(
+              use_case_name="",
+          )
 
     @parametrize
     def test_method_delete(self, client: Ascerta) -> None:
@@ -248,53 +255,51 @@ class TestKpis:
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
-        assert_matches_type(KpiDeleteResponse, kpi, path=["response"])
+        assert_matches_type(KpiDeleteResponse, kpi, path=['response'])
 
     @parametrize
     def test_raw_response_delete(self, client: Ascerta) -> None:
+
         response = client.use_cases.definitions.kpis.with_raw_response.delete(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = response.parse()
-        assert_matches_type(KpiDeleteResponse, kpi, path=["response"])
+        assert_matches_type(KpiDeleteResponse, kpi, path=['response'])
 
     @parametrize
     def test_streaming_response_delete(self, client: Ascerta) -> None:
         with client.use_cases.definitions.kpis.with_streaming_response.delete(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = response.parse()
-            assert_matches_type(KpiDeleteResponse, kpi, path=["response"])
+            assert_matches_type(KpiDeleteResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_path_params_delete(self, client: Ascerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.delete(
-                kpi_id="kpi_id",
-                use_case_name="",
-            )
+          client.use_cases.definitions.kpis.with_raw_response.delete(
+              kpi_id="kpi_id",
+              use_case_name="",
+          )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `kpi_id` but received ''"):
-            client.use_cases.definitions.kpis.with_raw_response.delete(
-                kpi_id="",
-                use_case_name="use_case_name",
-            )
-
-
+          client.use_cases.definitions.kpis.with_raw_response.delete(
+              kpi_id="",
+              use_case_name="use_case_name",
+          )
 class TestAsyncKpis:
-    parametrize = pytest.mark.parametrize(
-        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
-    )
+    parametrize = pytest.mark.parametrize("async_client", [False, True, {'http_client': 'aiohttp'}], indirect=True, ids=['loose', 'strict', 'aiohttp'])
+
 
     @parametrize
     async def test_method_create(self, async_client: AsyncAscerta) -> None:
@@ -304,7 +309,7 @@ class TestAsyncKpis:
             goal=0,
             kpi_type="boolean",
         )
-        assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+        assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncAscerta) -> None:
@@ -316,10 +321,11 @@ class TestAsyncKpis:
             kpi_id="kpi_id",
             kpi_name="kpi_name",
         )
-        assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+        assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncAscerta) -> None:
+
         response = await async_client.use_cases.definitions.kpis.with_raw_response.create(
             use_case_name="use_case_name",
             description="x",
@@ -328,9 +334,9 @@ class TestAsyncKpis:
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = await response.parse()
-        assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+        assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncAscerta) -> None:
@@ -339,24 +345,24 @@ class TestAsyncKpis:
             description="x",
             goal=0,
             kpi_type="boolean",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = await response.parse()
-            assert_matches_type(KpiCreateResponse, kpi, path=["response"])
+            assert_matches_type(KpiCreateResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_path_params_create(self, async_client: AsyncAscerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.create(
-                use_case_name="",
-                description="x",
-                goal=0,
-                kpi_type="boolean",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.create(
+              use_case_name="",
+              description="x",
+              goal=0,
+              kpi_type="boolean",
+          )
 
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncAscerta) -> None:
@@ -364,47 +370,48 @@ class TestAsyncKpis:
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
-        assert_matches_type(KpiRetrieveResponse, kpi, path=["response"])
+        assert_matches_type(KpiRetrieveResponse, kpi, path=['response'])
 
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncAscerta) -> None:
+
         response = await async_client.use_cases.definitions.kpis.with_raw_response.retrieve(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = await response.parse()
-        assert_matches_type(KpiRetrieveResponse, kpi, path=["response"])
+        assert_matches_type(KpiRetrieveResponse, kpi, path=['response'])
 
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncAscerta) -> None:
         async with async_client.use_cases.definitions.kpis.with_streaming_response.retrieve(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = await response.parse()
-            assert_matches_type(KpiRetrieveResponse, kpi, path=["response"])
+            assert_matches_type(KpiRetrieveResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncAscerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.retrieve(
-                kpi_id="kpi_id",
-                use_case_name="",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.retrieve(
+              kpi_id="kpi_id",
+              use_case_name="",
+          )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `kpi_id` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.retrieve(
-                kpi_id="",
-                use_case_name="use_case_name",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.retrieve(
+              kpi_id="",
+              use_case_name="use_case_name",
+          )
 
     @parametrize
     async def test_method_update(self, async_client: AsyncAscerta) -> None:
@@ -412,7 +419,7 @@ class TestAsyncKpis:
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
-        assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+        assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncAscerta) -> None:
@@ -423,54 +430,55 @@ class TestAsyncKpis:
             goal=0,
             kpi_name="kpi_name",
         )
-        assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+        assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncAscerta) -> None:
+
         response = await async_client.use_cases.definitions.kpis.with_raw_response.update(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = await response.parse()
-        assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+        assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncAscerta) -> None:
         async with async_client.use_cases.definitions.kpis.with_streaming_response.update(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = await response.parse()
-            assert_matches_type(KpiUpdateResponse, kpi, path=["response"])
+            assert_matches_type(KpiUpdateResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_path_params_update(self, async_client: AsyncAscerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.update(
-                kpi_id="kpi_id",
-                use_case_name="",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.update(
+              kpi_id="kpi_id",
+              use_case_name="",
+          )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `kpi_id` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.update(
-                kpi_id="",
-                use_case_name="use_case_name",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.update(
+              kpi_id="",
+              use_case_name="use_case_name",
+          )
 
     @parametrize
     async def test_method_list(self, async_client: AsyncAscerta) -> None:
         kpi = await async_client.use_cases.definitions.kpis.list(
             use_case_name="use_case_name",
         )
-        assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=["response"])
+        assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=['response'])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncAscerta) -> None:
@@ -481,38 +489,39 @@ class TestAsyncKpis:
             limit=0,
             sort_ascending=True,
         )
-        assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=["response"])
+        assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=['response'])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncAscerta) -> None:
+
         response = await async_client.use_cases.definitions.kpis.with_raw_response.list(
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = await response.parse()
-        assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=["response"])
+        assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=['response'])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncAscerta) -> None:
         async with async_client.use_cases.definitions.kpis.with_streaming_response.list(
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = await response.parse()
-            assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=["response"])
+            assert_matches_type(AsyncCursorPage[KpiListResponse], kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_path_params_list(self, async_client: AsyncAscerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.list(
-                use_case_name="",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.list(
+              use_case_name="",
+          )
 
     @parametrize
     async def test_method_delete(self, async_client: AsyncAscerta) -> None:
@@ -520,44 +529,45 @@ class TestAsyncKpis:
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
-        assert_matches_type(KpiDeleteResponse, kpi, path=["response"])
+        assert_matches_type(KpiDeleteResponse, kpi, path=['response'])
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncAscerta) -> None:
+
         response = await async_client.use_cases.definitions.kpis.with_raw_response.delete(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
         kpi = await response.parse()
-        assert_matches_type(KpiDeleteResponse, kpi, path=["response"])
+        assert_matches_type(KpiDeleteResponse, kpi, path=['response'])
 
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncAscerta) -> None:
         async with async_client.use_cases.definitions.kpis.with_streaming_response.delete(
             kpi_id="kpi_id",
             use_case_name="use_case_name",
-        ) as response:
+        ) as response :
             assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
 
             kpi = await response.parse()
-            assert_matches_type(KpiDeleteResponse, kpi, path=["response"])
+            assert_matches_type(KpiDeleteResponse, kpi, path=['response'])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_path_params_delete(self, async_client: AsyncAscerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.delete(
-                kpi_id="kpi_id",
-                use_case_name="",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.delete(
+              kpi_id="kpi_id",
+              use_case_name="",
+          )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `kpi_id` but received ''"):
-            await async_client.use_cases.definitions.kpis.with_raw_response.delete(
-                kpi_id="",
-                use_case_name="use_case_name",
-            )
+          await async_client.use_cases.definitions.kpis.with_raw_response.delete(
+              kpi_id="",
+              use_case_name="use_case_name",
+          )

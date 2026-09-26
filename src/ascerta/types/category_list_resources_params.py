@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import TypedDict, Annotated
 
 from .._utils import PropertyInfo
 
 __all__ = ["CategoryListResourcesParams"]
-
 
 class CategoryListResourcesParams(TypedDict, total=False):
     active: Annotated[bool, PropertyInfo(alias="Active")]

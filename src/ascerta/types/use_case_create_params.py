@@ -6,7 +6,6 @@ from typing_extensions import TypedDict
 
 __all__ = ["UseCaseCreateParams"]
 
-
 class UseCaseCreateParams(TypedDict, total=False):
     use_case_id: str
     """Use Case Id"""

@@ -6,7 +6,6 @@ from typing_extensions import TypedDict
 
 __all__ = ["IngestUnits"]
 
-
 class IngestUnits(TypedDict, total=False):
     input: int
 

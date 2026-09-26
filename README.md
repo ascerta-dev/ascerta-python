@@ -57,14 +57,12 @@ client = AsyncAscerta(
     api_key=os.environ.get("ASCERTA_API_KEY"),  # This is the default and can be omitted
 )
 
-
 async def main() -> None:
-    use_case_definition_response = await client.use_cases.definitions.create(
-        description="Sample Use Case Definition Description",
-        name="SampleUseCaseDefinition",
-    )
-    print(use_case_definition_response.request_id)
-
+  use_case_definition_response = await client.use_cases.definitions.create(
+      description="Sample Use Case Definition Description",
+      name="SampleUseCaseDefinition",
+  )
+  print(use_case_definition_response.request_id)
 
 asyncio.run(main())
 ```
@@ -90,18 +88,16 @@ import asyncio
 from ascerta import DefaultAioHttpClient
 from ascerta import AsyncAscerta
 
-
 async def main() -> None:
-    async with AsyncAscerta(
-        api_key=os.environ.get("ASCERTA_API_KEY"),  # This is the default and can be omitted
-        http_client=DefaultAioHttpClient(),
-    ) as client:
-        use_case_definition_response = await client.use_cases.definitions.create(
-            description="Sample Use Case Definition Description",
-            name="SampleUseCaseDefinition",
-        )
-        print(use_case_definition_response.request_id)
-
+  async with AsyncAscerta(
+    api_key=os.environ.get("ASCERTA_API_KEY"),  # This is the default and can be omitted
+    http_client=DefaultAioHttpClient(),
+) as client:
+    use_case_definition_response = await client.use_cases.definitions.create(
+        description="Sample Use Case Definition Description",
+        name="SampleUseCaseDefinition",
+    )
+    print(use_case_definition_response.request_id)
 
 asyncio.run(main())
 ```
@@ -142,14 +138,12 @@ from ascerta import AsyncAscerta
 
 client = AsyncAscerta()
 
-
 async def main() -> None:
     all_definitions = []
     # Iterate through items across all pages, issuing requests as needed.
     async for definition in client.use_cases.definitions.list():
         all_definitions.append(definition)
     print(all_definitions)
-
 
 asyncio.run(main())
 ```
@@ -171,7 +165,7 @@ Or just work directly with the returned data:
 ```python
 first_page = await client.use_cases.definitions.list()
 
-print(f"next page cursor: {first_page.cursor}")  # => "next page cursor: ..."
+print(f"next page cursor: {first_page.cursor}") # => "next page cursor: ..."
 for definition in first_page.items:
     print(definition.request_id)
 
@@ -190,7 +184,9 @@ client = Ascerta()
 use_case_definition_response = client.use_cases.definitions.create(
     description="x",
     name="x",
-    limit_config={"max": 0},
+    limit_config={
+        "max": 0
+    },
 )
 print(use_case_definition_response.limit_config)
 ```
@@ -217,7 +213,7 @@ try:
     )
 except ascerta.APIConnectionError as e:
     print("The server could not be reached")
-    print(e.__cause__)  # an underlying Exception, likely raised within httpx.
+    print(e.__cause__) # an underlying Exception, likely raised within httpx.
 except ascerta.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
 except ascerta.APIStatusError as e:
@@ -257,7 +253,7 @@ client = Ascerta(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).use_cases.definitions.create(
+client.with_options(max_retries = 5).use_cases.definitions.create(
     description="Sample Use Case Definition Description",
     name="SampleUseCaseDefinition",
 )
@@ -283,7 +279,7 @@ client = Ascerta(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).use_cases.definitions.create(
+client.with_options(timeout = 5.0).use_cases.definitions.create(
     description="Sample Use Case Definition Description",
     name="SampleUseCaseDefinition",
 )
@@ -351,11 +347,11 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 with client.use_cases.definitions.with_streaming_response.create(
     description="Sample Use Case Definition Description",
     name="SampleUseCaseDefinition",
-) as response:
-    print(response.headers.get("X-My-Header"))
+) as response :
+    print(response.headers.get('X-My-Header'))
 
     for line in response.iter_lines():
-        print(line)
+      print(line)
 ```
 
 The context manager is required so that the response will reliably be closed.
@@ -409,10 +405,7 @@ from ascerta import Ascerta, DefaultHttpxClient
 client = Ascerta(
     # Or use the `ASCERTA_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
-    http_client=DefaultHttpxClient(
-        proxy="http://my.test.proxy.example.com",
-        transport=httpx.HTTPTransport(local_address="0.0.0.0"),
-    ),
+    http_client=DefaultHttpxClient(proxy="http://my.test.proxy.example.com", transport=httpx.HTTPTransport(local_address="0.0.0.0")),
 )
 ```
 

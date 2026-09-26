@@ -1,28 +1,27 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, Optional
-from datetime import datetime
+from .._models import BaseModel
 
 from pydantic import Field as FieldInfo
 
-from .._models import BaseModel
+from datetime import datetime
+
+from typing import Dict, Optional
+
 from .category_resource_price_units import CategoryResourcePriceUnits
+
 from .category_resource_mapped_resource import CategoryResourceMappedResource
 
 __all__ = ["CategoryResourceResponse", "AwsBedrockResource", "AzureResource", "GoogleVertexResource"]
 
-
 class AwsBedrockResource(BaseModel):
-    aws_model_units: int = FieldInfo(alias="model_units")
-
+    aws_model_units: int = FieldInfo(alias = "model_units")
 
 class AzureResource(BaseModel):
     ptus: int
 
-
 class GoogleVertexResource(BaseModel):
     gsus: int
-
 
 class CategoryResourceResponse(BaseModel):
     active: bool

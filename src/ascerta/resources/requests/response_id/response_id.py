@@ -2,27 +2,18 @@
 
 from __future__ import annotations
 
-from .result import (
-    ResultResource,
-    AsyncResultResource,
-    ResultResourceWithRawResponse,
-    AsyncResultResourceWithRawResponse,
-    ResultResourceWithStreamingResponse,
-    AsyncResultResourceWithStreamingResponse,
-)
-from ...._compat import cached_property
-from .properties import (
-    PropertiesResource,
-    AsyncPropertiesResource,
-    PropertiesResourceWithRawResponse,
-    AsyncPropertiesResourceWithRawResponse,
-    PropertiesResourceWithStreamingResponse,
-    AsyncPropertiesResourceWithStreamingResponse,
-)
 from ...._resource import SyncAPIResource, AsyncAPIResource
 
-__all__ = ["ResponseIDResource", "AsyncResponseIDResource"]
+from .result import ResultResource, AsyncResultResource, ResultResourceWithRawResponse, AsyncResultResourceWithRawResponse, ResultResourceWithStreamingResponse, AsyncResultResourceWithStreamingResponse
 
+from ...._compat import cached_property
+
+from .properties import PropertiesResource, AsyncPropertiesResource, PropertiesResourceWithRawResponse, AsyncPropertiesResourceWithRawResponse, PropertiesResourceWithStreamingResponse, AsyncPropertiesResourceWithStreamingResponse
+
+from typing_extensions import Literal, overload
+from ...._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
+
+__all__ = ["ResponseIDResource", "AsyncResponseIDResource"]
 
 class ResponseIDResource(SyncAPIResource):
     @cached_property
@@ -54,7 +45,6 @@ class ResponseIDResource(SyncAPIResource):
         """
         return ResponseIDResourceWithStreamingResponse(self)
 
-
 class AsyncResponseIDResource(AsyncAPIResource):
     @cached_property
     def result(self) -> AsyncResultResource:
@@ -85,7 +75,6 @@ class AsyncResponseIDResource(AsyncAPIResource):
         """
         return AsyncResponseIDResourceWithStreamingResponse(self)
 
-
 class ResponseIDResourceWithRawResponse:
     def __init__(self, response_id: ResponseIDResource) -> None:
         self._response_id = response_id
@@ -99,7 +88,6 @@ class ResponseIDResourceWithRawResponse:
     def properties(self) -> PropertiesResourceWithRawResponse:
         """Requests"""
         return PropertiesResourceWithRawResponse(self._response_id.properties)
-
 
 class AsyncResponseIDResourceWithRawResponse:
     def __init__(self, response_id: AsyncResponseIDResource) -> None:
@@ -115,7 +103,6 @@ class AsyncResponseIDResourceWithRawResponse:
         """Requests"""
         return AsyncPropertiesResourceWithRawResponse(self._response_id.properties)
 
-
 class ResponseIDResourceWithStreamingResponse:
     def __init__(self, response_id: ResponseIDResource) -> None:
         self._response_id = response_id
@@ -129,7 +116,6 @@ class ResponseIDResourceWithStreamingResponse:
     def properties(self) -> PropertiesResourceWithStreamingResponse:
         """Requests"""
         return PropertiesResourceWithStreamingResponse(self._response_id.properties)
-
 
 class AsyncResponseIDResourceWithStreamingResponse:
     def __init__(self, response_id: AsyncResponseIDResource) -> None:

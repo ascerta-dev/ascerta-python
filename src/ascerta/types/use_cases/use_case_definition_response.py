@@ -1,15 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from ..._models import BaseModel
+
 from typing import Optional
+
+from ..shared.ascerta_common_models_budget_management_create_limit_base import AscertaCommonModelsBudgetManagementCreateLimitBase
+
 from typing_extensions import Literal
 
-from ..._models import BaseModel
-from ..shared.ascerta_common_models_budget_management_create_limit_base import (
-    AscertaCommonModelsBudgetManagementCreateLimitBase,
-)
-
 __all__ = ["UseCaseDefinitionResponse"]
-
 
 class UseCaseDefinitionResponse(BaseModel):
     description: str

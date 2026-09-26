@@ -1,6 +1,4 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .ascerta_common_models_budget_management_create_limit_base import AscertaCommonModelsBudgetManagementCreateLimitBase as AscertaCommonModelsBudgetManagementCreateLimitBase
 from .ingest_units import IngestUnits as IngestUnits
-from .ascerta_common_models_budget_management_create_limit_base import (
-    AscertaCommonModelsBudgetManagementCreateLimitBase as AscertaCommonModelsBudgetManagementCreateLimitBase,
-)
