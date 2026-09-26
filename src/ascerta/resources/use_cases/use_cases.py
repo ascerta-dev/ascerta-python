@@ -1,0 +1,483 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+import httpx
+
+from .kpis import (
+    KpisResource,
+    AsyncKpisResource,
+    KpisResourceWithRawResponse,
+    AsyncKpisResourceWithRawResponse,
+    KpisResourceWithStreamingResponse,
+    AsyncKpisResourceWithStreamingResponse,
+)
+from ...types import use_case_create_params
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._utils import path_template, maybe_transform, async_maybe_transform
+from ..._compat import cached_property
+from .properties import (
+    PropertiesResource,
+    AsyncPropertiesResource,
+    PropertiesResourceWithRawResponse,
+    AsyncPropertiesResourceWithRawResponse,
+    PropertiesResourceWithStreamingResponse,
+    AsyncPropertiesResourceWithStreamingResponse,
+)
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
+from ..._base_client import make_request_options
+from .definitions.definitions import (
+    DefinitionsResource,
+    AsyncDefinitionsResource,
+    DefinitionsResourceWithRawResponse,
+    AsyncDefinitionsResourceWithRawResponse,
+    DefinitionsResourceWithStreamingResponse,
+    AsyncDefinitionsResourceWithStreamingResponse,
+)
+from ...types.use_case_instance_response import UseCaseInstanceResponse
+
+__all__ = ["UseCasesResource", "AsyncUseCasesResource"]
+
+
+class UseCasesResource(SyncAPIResource):
+    """Use Cases"""
+
+    @cached_property
+    def kpis(self) -> KpisResource:
+        """KPIs"""
+        return KpisResource(self._client)
+
+    @cached_property
+    def definitions(self) -> DefinitionsResource:
+        """Use Cases"""
+        return DefinitionsResource(self._client)
+
+    @cached_property
+    def properties(self) -> PropertiesResource:
+        """Use Cases"""
+        return PropertiesResource(self._client)
+
+    @cached_property
+    def with_raw_response(self) -> UseCasesResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/ascerta-dev/ascerta-python#accessing-raw-response-data-eg-headers
+        """
+        return UseCasesResourceWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> UseCasesResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/ascerta-dev/ascerta-python#with_streaming_response
+        """
+        return UseCasesResourceWithStreamingResponse(self)
+
+    def create(
+        self,
+        use_case_name: str,
+        *,
+        use_case_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
+        """
+        Create a Use Case instance
+
+        Args:
+          use_case_id: Use Case Id
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not use_case_name:
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+        return self._post(
+            path_template("/api/v1/use_cases/instances/{use_case_name}", use_case_name=use_case_name),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"use_case_id": use_case_id}, use_case_create_params.UseCaseCreateParams),
+            ),
+            cast_to=UseCaseInstanceResponse,
+        )
+
+    def retrieve(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
+        """
+        Get a Use Case instance details
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not use_case_name:
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+        if not use_case_id:
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
+        return self._get(
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=UseCaseInstanceResponse,
+        )
+
+    def delete(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
+        """
+        Delete a Use Case instance
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not use_case_name:
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+        if not use_case_id:
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
+        return self._delete(
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=UseCaseInstanceResponse,
+        )
+
+
+class AsyncUseCasesResource(AsyncAPIResource):
+    """Use Cases"""
+
+    @cached_property
+    def kpis(self) -> AsyncKpisResource:
+        """KPIs"""
+        return AsyncKpisResource(self._client)
+
+    @cached_property
+    def definitions(self) -> AsyncDefinitionsResource:
+        """Use Cases"""
+        return AsyncDefinitionsResource(self._client)
+
+    @cached_property
+    def properties(self) -> AsyncPropertiesResource:
+        """Use Cases"""
+        return AsyncPropertiesResource(self._client)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncUseCasesResourceWithRawResponse:
+        """
+        This property can be used as a prefix for any HTTP method call to return
+        the raw response object instead of the parsed content.
+
+        For more information, see https://www.github.com/ascerta-dev/ascerta-python#accessing-raw-response-data-eg-headers
+        """
+        return AsyncUseCasesResourceWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncUseCasesResourceWithStreamingResponse:
+        """
+        An alternative to `.with_raw_response` that doesn't eagerly read the response body.
+
+        For more information, see https://www.github.com/ascerta-dev/ascerta-python#with_streaming_response
+        """
+        return AsyncUseCasesResourceWithStreamingResponse(self)
+
+    async def create(
+        self,
+        use_case_name: str,
+        *,
+        use_case_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
+        """
+        Create a Use Case instance
+
+        Args:
+          use_case_id: Use Case Id
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not use_case_name:
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+        return await self._post(
+            path_template("/api/v1/use_cases/instances/{use_case_name}", use_case_name=use_case_name),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"use_case_id": use_case_id}, use_case_create_params.UseCaseCreateParams
+                ),
+            ),
+            cast_to=UseCaseInstanceResponse,
+        )
+
+    async def retrieve(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
+        """
+        Get a Use Case instance details
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not use_case_name:
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+        if not use_case_id:
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
+        return await self._get(
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=UseCaseInstanceResponse,
+        )
+
+    async def delete(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
+        """
+        Delete a Use Case instance
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not use_case_name:
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
+        if not use_case_id:
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
+        return await self._delete(
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=UseCaseInstanceResponse,
+        )
+
+
+class UseCasesResourceWithRawResponse:
+    def __init__(self, use_cases: UseCasesResource) -> None:
+        self._use_cases = use_cases
+
+        self.create = to_raw_response_wrapper(
+            use_cases.create,
+        )
+        self.retrieve = to_raw_response_wrapper(
+            use_cases.retrieve,
+        )
+        self.delete = to_raw_response_wrapper(
+            use_cases.delete,
+        )
+
+    @cached_property
+    def kpis(self) -> KpisResourceWithRawResponse:
+        """KPIs"""
+        return KpisResourceWithRawResponse(self._use_cases.kpis)
+
+    @cached_property
+    def definitions(self) -> DefinitionsResourceWithRawResponse:
+        """Use Cases"""
+        return DefinitionsResourceWithRawResponse(self._use_cases.definitions)
+
+    @cached_property
+    def properties(self) -> PropertiesResourceWithRawResponse:
+        """Use Cases"""
+        return PropertiesResourceWithRawResponse(self._use_cases.properties)
+
+
+class AsyncUseCasesResourceWithRawResponse:
+    def __init__(self, use_cases: AsyncUseCasesResource) -> None:
+        self._use_cases = use_cases
+
+        self.create = async_to_raw_response_wrapper(
+            use_cases.create,
+        )
+        self.retrieve = async_to_raw_response_wrapper(
+            use_cases.retrieve,
+        )
+        self.delete = async_to_raw_response_wrapper(
+            use_cases.delete,
+        )
+
+    @cached_property
+    def kpis(self) -> AsyncKpisResourceWithRawResponse:
+        """KPIs"""
+        return AsyncKpisResourceWithRawResponse(self._use_cases.kpis)
+
+    @cached_property
+    def definitions(self) -> AsyncDefinitionsResourceWithRawResponse:
+        """Use Cases"""
+        return AsyncDefinitionsResourceWithRawResponse(self._use_cases.definitions)
+
+    @cached_property
+    def properties(self) -> AsyncPropertiesResourceWithRawResponse:
+        """Use Cases"""
+        return AsyncPropertiesResourceWithRawResponse(self._use_cases.properties)
+
+
+class UseCasesResourceWithStreamingResponse:
+    def __init__(self, use_cases: UseCasesResource) -> None:
+        self._use_cases = use_cases
+
+        self.create = to_streamed_response_wrapper(
+            use_cases.create,
+        )
+        self.retrieve = to_streamed_response_wrapper(
+            use_cases.retrieve,
+        )
+        self.delete = to_streamed_response_wrapper(
+            use_cases.delete,
+        )
+
+    @cached_property
+    def kpis(self) -> KpisResourceWithStreamingResponse:
+        """KPIs"""
+        return KpisResourceWithStreamingResponse(self._use_cases.kpis)
+
+    @cached_property
+    def definitions(self) -> DefinitionsResourceWithStreamingResponse:
+        """Use Cases"""
+        return DefinitionsResourceWithStreamingResponse(self._use_cases.definitions)
+
+    @cached_property
+    def properties(self) -> PropertiesResourceWithStreamingResponse:
+        """Use Cases"""
+        return PropertiesResourceWithStreamingResponse(self._use_cases.properties)
+
+
+class AsyncUseCasesResourceWithStreamingResponse:
+    def __init__(self, use_cases: AsyncUseCasesResource) -> None:
+        self._use_cases = use_cases
+
+        self.create = async_to_streamed_response_wrapper(
+            use_cases.create,
+        )
+        self.retrieve = async_to_streamed_response_wrapper(
+            use_cases.retrieve,
+        )
+        self.delete = async_to_streamed_response_wrapper(
+            use_cases.delete,
+        )
+
+    @cached_property
+    def kpis(self) -> AsyncKpisResourceWithStreamingResponse:
+        """KPIs"""
+        return AsyncKpisResourceWithStreamingResponse(self._use_cases.kpis)
+
+    @cached_property
+    def definitions(self) -> AsyncDefinitionsResourceWithStreamingResponse:
+        """Use Cases"""
+        return AsyncDefinitionsResourceWithStreamingResponse(self._use_cases.definitions)
+
+    @cached_property
+    def properties(self) -> AsyncPropertiesResourceWithStreamingResponse:
+        """Use Cases"""
+        return AsyncPropertiesResourceWithStreamingResponse(self._use_cases.properties)

@@ -1,0 +1,69 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+from typing import Dict, Union, Iterable, Optional
+from datetime import datetime
+from typing_extensions import Required, Annotated, TypedDict
+
+from .._types import SequenceNotStr
+from .._utils import PropertyInfo
+from .function_call_info_param import FunctionCallInfoParam
+from .shared_params.ingest_units import IngestUnits
+from .ascerta_common_models_api_router_header_info_param import AscertaCommonModelsAPIRouterHeaderInfoParam
+
+__all__ = ["BulkIngestRequestParam"]
+
+
+class BulkIngestRequestParam(TypedDict, total=False):
+    category: Required[str]
+
+    units: Required[Dict[str, IngestUnits]]
+
+    account_name: Optional[str]
+
+    end_to_end_latency_ms: Optional[int]
+
+    event_timestamp: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
+
+    http_status_code: Optional[int]
+
+    limit_ids: Optional[SequenceNotStr[str]]
+
+    properties: Optional[Dict[str, Optional[str]]]
+
+    provider_request_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]]
+
+    provider_request_json: Optional[str]
+
+    provider_request_reasoning_json: Optional[str]
+
+    provider_response_function_calls: Optional[Iterable[FunctionCallInfoParam]]
+
+    provider_response_headers: Optional[Iterable[AscertaCommonModelsAPIRouterHeaderInfoParam]]
+
+    provider_response_id: Optional[str]
+
+    provider_response_json: Union[str, SequenceNotStr[str], None]
+
+    provider_uri: Optional[str]
+
+    resource: Optional[str]
+
+    scope: Optional[str]
+
+    time_to_first_completion_token_ms: Optional[int]
+
+    time_to_first_token_ms: Optional[int]
+
+    use_case_id: Optional[str]
+
+    use_case_name: Optional[str]
+
+    use_case_properties: Optional[Dict[str, Optional[str]]]
+
+    use_case_step: Optional[str]
+
+    use_case_version: Optional[int]
+
+    user_id: Optional[str]
