@@ -6,7 +6,7 @@ import httpx
 import pytest
 import pydantic
 
-from ascerta import BaseModel, Ascerta, AsyncAscerta
+from ascerta import Ascerta, BaseModel, AsyncAscerta
 from ascerta._response import (
     APIResponse,
     BaseAPIResponse,

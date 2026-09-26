@@ -6,6 +6,7 @@ from typing_extensions import TypedDict
 
 __all__ = ["DefinitionListParams"]
 
+
 class DefinitionListParams(TypedDict, total=False):
     cursor: str
 

@@ -1,18 +1,17 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from ..._models import BaseModel
-
-from typing import Optional, List, Dict
-
+from typing import Dict, List, Optional
 from typing_extensions import Literal
 
-from .ascerta_common_models_budget_management_cost_details_base import AscertaCommonModelsBudgetManagementCostDetailsBase
-
-from ..cost_details import CostDetails
-
+from ..._models import BaseModel
 from .ingest_units import IngestUnits
+from ..cost_details import CostDetails
+from .ascerta_common_models_budget_management_cost_details_base import (
+    AscertaCommonModelsBudgetManagementCostDetailsBase,
+)
 
 __all__ = ["XproxyResult", "Cost", "Limits"]
+
 
 class Cost(BaseModel):
     currency: Optional[Literal["usd"]] = None
@@ -23,8 +22,10 @@ class Cost(BaseModel):
 
     total: Optional[CostDetails] = None
 
+
 class Limits(BaseModel):
     state: Optional[Literal["ok", "blocked", "blocked_external", "exceeded", "overrun", "failed"]] = None
+
 
 class XproxyResult(BaseModel):
     account_name: Optional[str] = None

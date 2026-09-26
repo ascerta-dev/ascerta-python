@@ -6,6 +6,7 @@ from typing_extensions import TypedDict
 
 __all__ = ["KpiListParams"]
 
+
 class KpiListParams(TypedDict, total=False):
     cursor: str
 

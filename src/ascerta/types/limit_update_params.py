@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import TypedDict
 
-from typing import Optional
-
 __all__ = ["LimitUpdateParams"]
+
 
 class LimitUpdateParams(TypedDict, total=False):
     limit_name: Optional[str]

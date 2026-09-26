@@ -1,7 +1,16 @@
 # Shared Types
 
 ```python
-from ascerta.types import APIError, AscertaCommonModelsBudgetManagementCostDetailsBase, AscertaCommonModelsBudgetManagementCreateLimitBase, IngestUnits, PropertiesRequest, PropertiesResponse, XproxyError, XproxyResult
+from ascerta.types import (
+    APIError,
+    AscertaCommonModelsBudgetManagementCostDetailsBase,
+    AscertaCommonModelsBudgetManagementCreateLimitBase,
+    IngestUnits,
+    PropertiesRequest,
+    PropertiesResponse,
+    XproxyError,
+    XproxyResult,
+)
 ```
 
 # Limits
@@ -9,7 +18,16 @@ from ascerta.types import APIError, AscertaCommonModelsBudgetManagementCostDetai
 Types:
 
 ```python
-from ascerta.types import CostData, CostDetails, DefaultResponse, Limit, LimitHistoryResponse, LimitResponse, RequestsData, TotalCostData
+from ascerta.types import (
+    CostData,
+    CostDetails,
+    DefaultResponse,
+    Limit,
+    LimitHistoryResponse,
+    LimitResponse,
+    RequestsData,
+    TotalCostData,
+)
 ```
 
 Methods:
@@ -38,7 +56,14 @@ Methods:
 Types:
 
 ```python
-from ascerta.types import AscertaCommonModelsAPIRouterHeaderInfo, BulkIngestRequest, BulkIngestResponse, FunctionCallInfo, IngestRequest, IngestResponse
+from ascerta.types import (
+    AscertaCommonModelsAPIRouterHeaderInfo,
+    BulkIngestRequest,
+    BulkIngestResponse,
+    FunctionCallInfo,
+    IngestRequest,
+    IngestResponse,
+)
 ```
 
 Methods:
@@ -51,7 +76,14 @@ Methods:
 Types:
 
 ```python
-from ascerta.types import CategoryResourceMappedResource, CategoryResourcePriceUnits, CategoryResourceResponse, CategoryResponse, CategoryDeleteResponse, CategoryDeleteResourceResponse
+from ascerta.types import (
+    CategoryResourceMappedResource,
+    CategoryResourcePriceUnits,
+    CategoryResourceResponse,
+    CategoryResponse,
+    CategoryDeleteResponse,
+    CategoryDeleteResourceResponse,
+)
 ```
 
 Methods:
@@ -118,7 +150,13 @@ Methods:
 Types:
 
 ```python
-from ascerta.types.use_cases.definitions import KpiCreateResponse, KpiRetrieveResponse, KpiUpdateResponse, KpiListResponse, KpiDeleteResponse
+from ascerta.types.use_cases.definitions import (
+    KpiCreateResponse,
+    KpiRetrieveResponse,
+    KpiUpdateResponse,
+    KpiListResponse,
+    KpiDeleteResponse,
+)
 ```
 
 Methods:

@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict, Required, Literal
-
-from typing import Optional, Dict
+from typing import Dict, Optional
+from typing_extensions import Literal, Required, TypedDict
 
 __all__ = ["LimitConfigCreateParams"]
+
 
 class LimitConfigCreateParams(TypedDict, total=False):
     max: Required[float]

@@ -1,16 +1,14 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .._models import BaseModel
-
+from typing import Optional
 from datetime import datetime
-
 from typing_extensions import Literal
 
+from .._models import BaseModel
 from .total_cost_data import TotalCostData
 
-from typing import Optional
-
 __all__ = ["Limit"]
+
 
 class Limit(BaseModel):
     limit_creation_timestamp: datetime

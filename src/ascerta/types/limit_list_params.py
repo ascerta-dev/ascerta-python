@@ -6,6 +6,7 @@ from typing_extensions import TypedDict
 
 __all__ = ["LimitListParams"]
 
+
 class LimitListParams(TypedDict, total=False):
     cursor: str
 

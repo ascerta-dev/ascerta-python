@@ -8,7 +8,7 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from ascerta._types import not_given, omit, Base64FileInput
+from ascerta._types import Base64FileInput, omit, not_given
 from ascerta._utils import (
     PropertyInfo,
     transform as _transform,

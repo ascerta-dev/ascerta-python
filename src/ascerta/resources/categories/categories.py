@@ -4,39 +4,38 @@ from __future__ import annotations
 
 import httpx
 
-from ..._resource import SyncAPIResource, AsyncAPIResource
-
-from .resources import ResourcesResource, AsyncResourcesResource, ResourcesResourceWithRawResponse, AsyncResourcesResourceWithRawResponse, ResourcesResourceWithStreamingResponse, AsyncResourcesResourceWithStreamingResponse
-
+from ...types import category_list_params, category_list_resources_params
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._utils import path_template, maybe_transform
 from ..._compat import cached_property
-
-from ...types.category_response import CategoryResponse
-
+from .resources import (
+    ResourcesResource,
+    AsyncResourcesResource,
+    ResourcesResourceWithRawResponse,
+    AsyncResourcesResourceWithRawResponse,
+    ResourcesResourceWithStreamingResponse,
+    AsyncResourcesResourceWithStreamingResponse,
+)
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
 from ...pagination import SyncCursorPage, AsyncCursorPage
-
-from ..._base_client import make_request_options, AsyncPaginator
-
-from ..._utils import maybe_transform, path_template
-
-from ..._types import Omit, omit, NotGiven
-
+from ..._base_client import AsyncPaginator, make_request_options
+from ...types.category_response import CategoryResponse
 from ...types.category_delete_response import CategoryDeleteResponse
-
-from ...types.category_delete_resource_response import CategoryDeleteResourceResponse
-
 from ...types.category_resource_response import CategoryResourceResponse
-
-from ..._response import to_raw_response_wrapper, async_to_raw_response_wrapper, to_streamed_response_wrapper, async_to_streamed_response_wrapper
-
-from typing_extensions import Literal, overload
-from ..._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
-from ...types import category_list_params
-from ...types import category_list_resources_params
+from ...types.category_delete_resource_response import CategoryDeleteResourceResponse
 
 __all__ = ["CategoriesResource", "AsyncCategoriesResource"]
 
+
 class CategoriesResource(SyncAPIResource):
     """System and Custom Categories"""
+
     @cached_property
     def resources(self) -> ResourcesResource:
         """Resources"""
@@ -61,18 +60,20 @@ class CategoriesResource(SyncAPIResource):
         """
         return CategoriesResourceWithStreamingResponse(self)
 
-    def list(self,
-    *,
-    active: bool | Omit = omit,
-    cursor: str | Omit = omit,
-    limit: int | Omit = omit,
-    sort_ascending: bool | Omit = omit,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> SyncCursorPage[CategoryResponse]:
+    def list(
+        self,
+        *,
+        active: bool | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        sort_ascending: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SyncCursorPage[CategoryResponse]:
         """
         Get all Categories
 
@@ -87,25 +88,36 @@ class CategoriesResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/api/v1/categories",
-            page = SyncCursorPage[CategoryResponse],
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
-                "active": active,
-                "cursor": cursor,
-                "limit": limit,
-                "sort_ascending": sort_ascending,
-            }, category_list_params.CategoryListParams)),
+            page=SyncCursorPage[CategoryResponse],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "active": active,
+                        "cursor": cursor,
+                        "limit": limit,
+                        "sort_ascending": sort_ascending,
+                    },
+                    category_list_params.CategoryListParams,
+                ),
+            ),
             model=CategoryResponse,
         )
 
-    def delete(self,
-    category: str,
-    *,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> CategoryDeleteResponse:
+    def delete(
+        self,
+        category: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CategoryDeleteResponse:
         """
         Delete a Category and all of its Resources
 
@@ -119,25 +131,27 @@ class CategoriesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not category:
-          raise ValueError(
-            f'Expected a non-empty value for `category` but received {category!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `category` but received {category!r}")
         return self._delete(
             path_template("/api/v1/categories/{category}", category=category),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=CategoryDeleteResponse,
         )
 
-    def delete_resource(self,
-    resource: str,
-    *,
-    category: str,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> CategoryDeleteResourceResponse:
+    def delete_resource(
+        self,
+        resource: str,
+        *,
+        category: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CategoryDeleteResourceResponse:
         """
         Delete all versions of Resource from a Category
 
@@ -151,32 +165,32 @@ class CategoriesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not category:
-          raise ValueError(
-            f'Expected a non-empty value for `category` but received {category!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `category` but received {category!r}")
         if not resource:
-          raise ValueError(
-            f'Expected a non-empty value for `resource` but received {resource!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `resource` but received {resource!r}")
         return self._delete(
             path_template("/api/v1/categories/{category}/resources/{resource}", category=category, resource=resource),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=CategoryDeleteResourceResponse,
         )
 
-    def list_resources(self,
-    category: str,
-    *,
-    active: bool | Omit = omit,
-    cursor: str | Omit = omit,
-    limit: int | Omit = omit,
-    sort_ascending: bool | Omit = omit,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> SyncCursorPage[CategoryResourceResponse]:
+    def list_resources(
+        self,
+        category: str,
+        *,
+        active: bool | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        sort_ascending: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SyncCursorPage[CategoryResourceResponse]:
         """
         Get all Resources for a Category
 
@@ -190,23 +204,32 @@ class CategoriesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not category:
-          raise ValueError(
-            f'Expected a non-empty value for `category` but received {category!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `category` but received {category!r}")
         return self._get_api_list(
             path_template("/api/v1/categories/{category}/resources", category=category),
-            page = SyncCursorPage[CategoryResourceResponse],
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
-                "active": active,
-                "cursor": cursor,
-                "limit": limit,
-                "sort_ascending": sort_ascending,
-            }, category_list_resources_params.CategoryListResourcesParams)),
+            page=SyncCursorPage[CategoryResourceResponse],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "active": active,
+                        "cursor": cursor,
+                        "limit": limit,
+                        "sort_ascending": sort_ascending,
+                    },
+                    category_list_resources_params.CategoryListResourcesParams,
+                ),
+            ),
             model=CategoryResourceResponse,
         )
 
+
 class AsyncCategoriesResource(AsyncAPIResource):
     """System and Custom Categories"""
+
     @cached_property
     def resources(self) -> AsyncResourcesResource:
         """Resources"""
@@ -231,18 +254,20 @@ class AsyncCategoriesResource(AsyncAPIResource):
         """
         return AsyncCategoriesResourceWithStreamingResponse(self)
 
-    def list(self,
-    *,
-    active: bool | Omit = omit,
-    cursor: str | Omit = omit,
-    limit: int | Omit = omit,
-    sort_ascending: bool | Omit = omit,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> AsyncPaginator[CategoryResponse, AsyncCursorPage[CategoryResponse]]:
+    def list(
+        self,
+        *,
+        active: bool | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        sort_ascending: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AsyncPaginator[CategoryResponse, AsyncCursorPage[CategoryResponse]]:
         """
         Get all Categories
 
@@ -257,25 +282,36 @@ class AsyncCategoriesResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/api/v1/categories",
-            page = AsyncCursorPage[CategoryResponse],
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
-                "active": active,
-                "cursor": cursor,
-                "limit": limit,
-                "sort_ascending": sort_ascending,
-            }, category_list_params.CategoryListParams)),
+            page=AsyncCursorPage[CategoryResponse],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "active": active,
+                        "cursor": cursor,
+                        "limit": limit,
+                        "sort_ascending": sort_ascending,
+                    },
+                    category_list_params.CategoryListParams,
+                ),
+            ),
             model=CategoryResponse,
         )
 
-    async def delete(self,
-    category: str,
-    *,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> CategoryDeleteResponse:
+    async def delete(
+        self,
+        category: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CategoryDeleteResponse:
         """
         Delete a Category and all of its Resources
 
@@ -289,25 +325,27 @@ class AsyncCategoriesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not category:
-          raise ValueError(
-            f'Expected a non-empty value for `category` but received {category!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `category` but received {category!r}")
         return await self._delete(
             path_template("/api/v1/categories/{category}", category=category),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=CategoryDeleteResponse,
         )
 
-    async def delete_resource(self,
-    resource: str,
-    *,
-    category: str,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> CategoryDeleteResourceResponse:
+    async def delete_resource(
+        self,
+        resource: str,
+        *,
+        category: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CategoryDeleteResourceResponse:
         """
         Delete all versions of Resource from a Category
 
@@ -321,32 +359,32 @@ class AsyncCategoriesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not category:
-          raise ValueError(
-            f'Expected a non-empty value for `category` but received {category!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `category` but received {category!r}")
         if not resource:
-          raise ValueError(
-            f'Expected a non-empty value for `resource` but received {resource!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `resource` but received {resource!r}")
         return await self._delete(
             path_template("/api/v1/categories/{category}/resources/{resource}", category=category, resource=resource),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=CategoryDeleteResourceResponse,
         )
 
-    def list_resources(self,
-    category: str,
-    *,
-    active: bool | Omit = omit,
-    cursor: str | Omit = omit,
-    limit: int | Omit = omit,
-    sort_ascending: bool | Omit = omit,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> AsyncPaginator[CategoryResourceResponse, AsyncCursorPage[CategoryResourceResponse]]:
+    def list_resources(
+        self,
+        category: str,
+        *,
+        active: bool | Omit = omit,
+        cursor: str | Omit = omit,
+        limit: int | Omit = omit,
+        sort_ascending: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AsyncPaginator[CategoryResourceResponse, AsyncCursorPage[CategoryResourceResponse]]:
         """
         Get all Resources for a Category
 
@@ -360,20 +398,28 @@ class AsyncCategoriesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not category:
-          raise ValueError(
-            f'Expected a non-empty value for `category` but received {category!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `category` but received {category!r}")
         return self._get_api_list(
             path_template("/api/v1/categories/{category}/resources", category=category),
-            page = AsyncCursorPage[CategoryResourceResponse],
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
-                "active": active,
-                "cursor": cursor,
-                "limit": limit,
-                "sort_ascending": sort_ascending,
-            }, category_list_resources_params.CategoryListResourcesParams)),
+            page=AsyncCursorPage[CategoryResourceResponse],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "active": active,
+                        "cursor": cursor,
+                        "limit": limit,
+                        "sort_ascending": sort_ascending,
+                    },
+                    category_list_resources_params.CategoryListResourcesParams,
+                ),
+            ),
             model=CategoryResourceResponse,
         )
+
 
 class CategoriesResourceWithRawResponse:
     def __init__(self, categories: CategoriesResource) -> None:
@@ -397,6 +443,7 @@ class CategoriesResourceWithRawResponse:
         """Resources"""
         return ResourcesResourceWithRawResponse(self._categories.resources)
 
+
 class AsyncCategoriesResourceWithRawResponse:
     def __init__(self, categories: AsyncCategoriesResource) -> None:
         self._categories = categories
@@ -419,6 +466,7 @@ class AsyncCategoriesResourceWithRawResponse:
         """Resources"""
         return AsyncResourcesResourceWithRawResponse(self._categories.resources)
 
+
 class CategoriesResourceWithStreamingResponse:
     def __init__(self, categories: CategoriesResource) -> None:
         self._categories = categories
@@ -440,6 +488,7 @@ class CategoriesResourceWithStreamingResponse:
     def resources(self) -> ResourcesResourceWithStreamingResponse:
         """Resources"""
         return ResourcesResourceWithStreamingResponse(self._categories.resources)
+
 
 class AsyncCategoriesResourceWithStreamingResponse:
     def __init__(self, categories: AsyncCategoriesResource) -> None:

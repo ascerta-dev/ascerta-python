@@ -4,34 +4,50 @@ from __future__ import annotations
 
 import httpx
 
-from ..._resource import SyncAPIResource, AsyncAPIResource
-
-from .kpis import KpisResource, AsyncKpisResource, KpisResourceWithRawResponse, AsyncKpisResourceWithRawResponse, KpisResourceWithStreamingResponse, AsyncKpisResourceWithStreamingResponse
-
-from ..._compat import cached_property
-
-from .definitions.definitions import DefinitionsResource, AsyncDefinitionsResource, DefinitionsResourceWithRawResponse, AsyncDefinitionsResourceWithRawResponse, DefinitionsResourceWithStreamingResponse, AsyncDefinitionsResourceWithStreamingResponse
-
-from .properties import PropertiesResource, AsyncPropertiesResource, PropertiesResourceWithRawResponse, AsyncPropertiesResourceWithRawResponse, PropertiesResourceWithStreamingResponse, AsyncPropertiesResourceWithStreamingResponse
-
-from ..._utils import path_template, maybe_transform, async_maybe_transform
-
-from ...types.use_case_instance_response import UseCaseInstanceResponse
-
-from ..._base_client import make_request_options
-
-from ..._types import Omit, omit, NotGiven
-
-from ..._response import to_raw_response_wrapper, async_to_raw_response_wrapper, to_streamed_response_wrapper, async_to_streamed_response_wrapper
-
-from typing_extensions import Literal, overload
-from ..._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
+from .kpis import (
+    KpisResource,
+    AsyncKpisResource,
+    KpisResourceWithRawResponse,
+    AsyncKpisResourceWithRawResponse,
+    KpisResourceWithStreamingResponse,
+    AsyncKpisResourceWithStreamingResponse,
+)
 from ...types import use_case_create_params
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._utils import path_template, maybe_transform, async_maybe_transform
+from ..._compat import cached_property
+from .properties import (
+    PropertiesResource,
+    AsyncPropertiesResource,
+    PropertiesResourceWithRawResponse,
+    AsyncPropertiesResourceWithRawResponse,
+    PropertiesResourceWithStreamingResponse,
+    AsyncPropertiesResourceWithStreamingResponse,
+)
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
+from ..._base_client import make_request_options
+from .definitions.definitions import (
+    DefinitionsResource,
+    AsyncDefinitionsResource,
+    DefinitionsResourceWithRawResponse,
+    AsyncDefinitionsResourceWithRawResponse,
+    DefinitionsResourceWithStreamingResponse,
+    AsyncDefinitionsResourceWithStreamingResponse,
+)
+from ...types.use_case_instance_response import UseCaseInstanceResponse
 
 __all__ = ["UseCasesResource", "AsyncUseCasesResource"]
 
+
 class UseCasesResource(SyncAPIResource):
     """Use Cases"""
+
     @cached_property
     def kpis(self) -> KpisResource:
         """KPIs"""
@@ -66,16 +82,18 @@ class UseCasesResource(SyncAPIResource):
         """
         return UseCasesResourceWithStreamingResponse(self)
 
-    def create(self,
-    use_case_name: str,
-    *,
-    use_case_id: str | Omit = omit,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseInstanceResponse:
+    def create(
+        self,
+        use_case_name: str,
+        *,
+        use_case_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
         """
         Create a Use Case instance
 
@@ -91,27 +109,31 @@ class UseCasesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
         return self._post(
             path_template("/api/v1/use_cases/instances/{use_case_name}", use_case_name=use_case_name),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=maybe_transform({
-                "use_case_id": use_case_id
-            }, use_case_create_params.UseCaseCreateParams)),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"use_case_id": use_case_id}, use_case_create_params.UseCaseCreateParams),
+            ),
             cast_to=UseCaseInstanceResponse,
         )
 
-    def retrieve(self,
-    use_case_id: str,
-    *,
-    use_case_name: str,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseInstanceResponse:
+    def retrieve(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
         """
         Get a Use Case instance details
 
@@ -125,29 +147,33 @@ class UseCasesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
         if not use_case_id:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_id` but received {use_case_id!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
         return self._get(
-            path_template("/api/v1/use_cases/instances/{use_case_name}/{use_case_id}", use_case_name=use_case_name, use_case_id=use_case_id),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=UseCaseInstanceResponse,
         )
 
-    def delete(self,
-    use_case_id: str,
-    *,
-    use_case_name: str,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseInstanceResponse:
+    def delete(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
         """
         Delete a Use Case instance
 
@@ -161,21 +187,25 @@ class UseCasesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
         if not use_case_id:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_id` but received {use_case_id!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
         return self._delete(
-            path_template("/api/v1/use_cases/instances/{use_case_name}/{use_case_id}", use_case_name=use_case_name, use_case_id=use_case_id),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=UseCaseInstanceResponse,
         )
 
+
 class AsyncUseCasesResource(AsyncAPIResource):
     """Use Cases"""
+
     @cached_property
     def kpis(self) -> AsyncKpisResource:
         """KPIs"""
@@ -210,16 +240,18 @@ class AsyncUseCasesResource(AsyncAPIResource):
         """
         return AsyncUseCasesResourceWithStreamingResponse(self)
 
-    async def create(self,
-    use_case_name: str,
-    *,
-    use_case_id: str | Omit = omit,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseInstanceResponse:
+    async def create(
+        self,
+        use_case_name: str,
+        *,
+        use_case_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
         """
         Create a Use Case instance
 
@@ -235,27 +267,33 @@ class AsyncUseCasesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
         return await self._post(
             path_template("/api/v1/use_cases/instances/{use_case_name}", use_case_name=use_case_name),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout, query=await async_maybe_transform({
-                "use_case_id": use_case_id
-            }, use_case_create_params.UseCaseCreateParams)),
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"use_case_id": use_case_id}, use_case_create_params.UseCaseCreateParams
+                ),
+            ),
             cast_to=UseCaseInstanceResponse,
         )
 
-    async def retrieve(self,
-    use_case_id: str,
-    *,
-    use_case_name: str,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseInstanceResponse:
+    async def retrieve(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
         """
         Get a Use Case instance details
 
@@ -269,29 +307,33 @@ class AsyncUseCasesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
         if not use_case_id:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_id` but received {use_case_id!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
         return await self._get(
-            path_template("/api/v1/use_cases/instances/{use_case_name}/{use_case_id}", use_case_name=use_case_name, use_case_id=use_case_id),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=UseCaseInstanceResponse,
         )
 
-    async def delete(self,
-    use_case_id: str,
-    *,
-    use_case_name: str,
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> UseCaseInstanceResponse:
+    async def delete(
+        self,
+        use_case_id: str,
+        *,
+        use_case_name: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> UseCaseInstanceResponse:
         """
         Delete a Use Case instance
 
@@ -305,18 +347,21 @@ class AsyncUseCasesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not use_case_name:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_name` but received {use_case_name!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_name` but received {use_case_name!r}")
         if not use_case_id:
-          raise ValueError(
-            f'Expected a non-empty value for `use_case_id` but received {use_case_id!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `use_case_id` but received {use_case_id!r}")
         return await self._delete(
-            path_template("/api/v1/use_cases/instances/{use_case_name}/{use_case_id}", use_case_name=use_case_name, use_case_id=use_case_id),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            path_template(
+                "/api/v1/use_cases/instances/{use_case_name}/{use_case_id}",
+                use_case_name=use_case_name,
+                use_case_id=use_case_id,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=UseCaseInstanceResponse,
         )
+
 
 class UseCasesResourceWithRawResponse:
     def __init__(self, use_cases: UseCasesResource) -> None:
@@ -347,6 +392,7 @@ class UseCasesResourceWithRawResponse:
         """Use Cases"""
         return PropertiesResourceWithRawResponse(self._use_cases.properties)
 
+
 class AsyncUseCasesResourceWithRawResponse:
     def __init__(self, use_cases: AsyncUseCasesResource) -> None:
         self._use_cases = use_cases
@@ -376,6 +422,7 @@ class AsyncUseCasesResourceWithRawResponse:
         """Use Cases"""
         return AsyncPropertiesResourceWithRawResponse(self._use_cases.properties)
 
+
 class UseCasesResourceWithStreamingResponse:
     def __init__(self, use_cases: UseCasesResource) -> None:
         self._use_cases = use_cases
@@ -404,6 +451,7 @@ class UseCasesResourceWithStreamingResponse:
     def properties(self) -> PropertiesResourceWithStreamingResponse:
         """Use Cases"""
         return PropertiesResourceWithStreamingResponse(self._use_cases.properties)
+
 
 class AsyncUseCasesResourceWithStreamingResponse:
     def __init__(self, use_cases: AsyncUseCasesResource) -> None:

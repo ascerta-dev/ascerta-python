@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict, Required
-
 from typing import Union
+from typing_extensions import Required, TypedDict
 
 __all__ = ["KpiUpdateParams"]
+
 
 class KpiUpdateParams(TypedDict, total=False):
     use_case_name: Required[str]

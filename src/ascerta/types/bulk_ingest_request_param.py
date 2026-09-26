@@ -2,23 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional, Union, Iterable
-
-from .shared_params.ingest_units import IngestUnits
-
+from typing import Dict, Union, Iterable, Optional
 from datetime import datetime
+from typing_extensions import Required, Annotated, TypedDict
 
 from .._types import SequenceNotStr
-
+from .._utils import PropertyInfo
+from .function_call_info_param import FunctionCallInfoParam
+from .shared_params.ingest_units import IngestUnits
 from .ascerta_common_models_api_router_header_info_param import AscertaCommonModelsAPIRouterHeaderInfoParam
 
-from .function_call_info_param import FunctionCallInfoParam
-
-from typing_extensions import TypedDict, Required, Annotated
-
-from .._utils import PropertyInfo
-
 __all__ = ["BulkIngestRequestParam"]
+
 
 class BulkIngestRequestParam(TypedDict, total=False):
     category: Required[str]
@@ -29,7 +24,7 @@ class BulkIngestRequestParam(TypedDict, total=False):
 
     end_to_end_latency_ms: Optional[int]
 
-    event_timestamp: Annotated[Union[str, datetime, None], PropertyInfo(format = "iso8601")]
+    event_timestamp: Annotated[Union[str, datetime, None], PropertyInfo(format="iso8601")]
 
     http_status_code: Optional[int]
 

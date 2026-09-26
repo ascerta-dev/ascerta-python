@@ -2,32 +2,30 @@
 
 from __future__ import annotations
 
-import httpx
-
-from ...._resource import SyncAPIResource, AsyncAPIResource
-
-from ...._compat import cached_property
-
-from ...._utils import path_template, maybe_transform, async_maybe_transform
-
-from ....types.shared.properties_response import PropertiesResponse
-
-from ...._base_client import make_request_options
-
 from typing import Dict, Optional
 
-from ...._types import NotGiven
+import httpx
 
-from ...._response import to_raw_response_wrapper, async_to_raw_response_wrapper, to_streamed_response_wrapper, async_to_streamed_response_wrapper
-
-from typing_extensions import Literal, overload
-from ...._types import Timeout, Headers, NotGiven, not_given, Omit, omit, NoneType, Query, Body
+from ...._types import Body, Query, Headers, NotGiven, not_given
+from ...._utils import path_template, maybe_transform, async_maybe_transform
+from ...._compat import cached_property
+from ...._resource import SyncAPIResource, AsyncAPIResource
+from ...._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
+from ...._base_client import make_request_options
 from ....types.requests.request_id import property_update_params
+from ....types.shared.properties_response import PropertiesResponse
 
 __all__ = ["PropertiesResource", "AsyncPropertiesResource"]
 
+
 class PropertiesResource(SyncAPIResource):
     """Requests"""
+
     @cached_property
     def with_raw_response(self) -> PropertiesResourceWithRawResponse:
         """
@@ -47,16 +45,18 @@ class PropertiesResource(SyncAPIResource):
         """
         return PropertiesResourceWithStreamingResponse(self)
 
-    def update(self,
-    request_id: str,
-    *,
-    properties: Dict[str, Optional[str]],
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> PropertiesResponse:
+    def update(
+        self,
+        request_id: str,
+        *,
+        properties: Dict[str, Optional[str]],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> PropertiesResponse:
         """
         Update a Request properties
 
@@ -70,20 +70,20 @@ class PropertiesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not request_id:
-          raise ValueError(
-            f'Expected a non-empty value for `request_id` but received {request_id!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `request_id` but received {request_id!r}")
         return self._put(
             path_template("/api/v1/requests/{request_id}/properties", request_id=request_id),
-            body=maybe_transform({
-                "properties": properties
-            }, property_update_params.PropertyUpdateParams),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            body=maybe_transform({"properties": properties}, property_update_params.PropertyUpdateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=PropertiesResponse,
         )
 
+
 class AsyncPropertiesResource(AsyncAPIResource):
     """Requests"""
+
     @cached_property
     def with_raw_response(self) -> AsyncPropertiesResourceWithRawResponse:
         """
@@ -103,16 +103,18 @@ class AsyncPropertiesResource(AsyncAPIResource):
         """
         return AsyncPropertiesResourceWithStreamingResponse(self)
 
-    async def update(self,
-    request_id: str,
-    *,
-    properties: Dict[str, Optional[str]],
-    # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-    # The extra values given here take precedence over values defined on the client or passed to this method.
-    extra_headers: Headers | None = None,
-    extra_query: Query | None = None,
-    extra_body: Body | None = None,
-    timeout: float | httpx.Timeout | None | NotGiven = not_given,) -> PropertiesResponse:
+    async def update(
+        self,
+        request_id: str,
+        *,
+        properties: Dict[str, Optional[str]],
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> PropertiesResponse:
         """
         Update a Request properties
 
@@ -126,17 +128,16 @@ class AsyncPropertiesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         if not request_id:
-          raise ValueError(
-            f'Expected a non-empty value for `request_id` but received {request_id!r}'
-          )
+            raise ValueError(f"Expected a non-empty value for `request_id` but received {request_id!r}")
         return await self._put(
             path_template("/api/v1/requests/{request_id}/properties", request_id=request_id),
-            body=await async_maybe_transform({
-                "properties": properties
-            }, property_update_params.PropertyUpdateParams),
-            options=make_request_options(extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout),
+            body=await async_maybe_transform({"properties": properties}, property_update_params.PropertyUpdateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
             cast_to=PropertiesResponse,
         )
+
 
 class PropertiesResourceWithRawResponse:
     def __init__(self, properties: PropertiesResource) -> None:
@@ -146,6 +147,7 @@ class PropertiesResourceWithRawResponse:
             properties.update,
         )
 
+
 class AsyncPropertiesResourceWithRawResponse:
     def __init__(self, properties: AsyncPropertiesResource) -> None:
         self._properties = properties
@@ -154,6 +156,7 @@ class AsyncPropertiesResourceWithRawResponse:
             properties.update,
         )
 
+
 class PropertiesResourceWithStreamingResponse:
     def __init__(self, properties: PropertiesResource) -> None:
         self._properties = properties
@@ -161,6 +164,7 @@ class PropertiesResourceWithStreamingResponse:
         self.update = to_streamed_response_wrapper(
             properties.update,
         )
+
 
 class AsyncPropertiesResourceWithStreamingResponse:
     def __init__(self, properties: AsyncPropertiesResource) -> None:

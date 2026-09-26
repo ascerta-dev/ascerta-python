@@ -4,5 +4,6 @@ from .._models import BaseModel
 
 __all__ = ["CategoryResponse"]
 
+
 class CategoryResponse(BaseModel):
     category: str

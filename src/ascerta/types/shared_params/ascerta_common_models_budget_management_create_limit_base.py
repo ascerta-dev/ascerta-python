@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal, TypedDict, Required
-
-from typing import Optional, Dict
+from typing import Dict, Optional
+from typing_extensions import Literal, Required, TypedDict
 
 __all__ = ["AscertaCommonModelsBudgetManagementCreateLimitBase"]
+
 
 class AscertaCommonModelsBudgetManagementCreateLimitBase(TypedDict, total=False):
     max: Required[float]

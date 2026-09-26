@@ -2,103 +2,99 @@
 
 from __future__ import annotations
 
-from ascerta import Ascerta, AsyncAscerta
-
-from ascerta.types.use_cases import UseCaseDefinitionResponse
-
-from typing import cast, Any
-
 import os
+from typing import Any, cast
+
 import pytest
-import httpx
-from typing_extensions import get_args
-from respx import MockRouter
+
 from ascerta import Ascerta, AsyncAscerta
 from tests.utils import assert_matches_type
+from ascerta.types.use_cases import UseCaseDefinitionResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
-class TestVersion:
-    parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=['loose', 'strict'])
 
+class TestVersion:
+    parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
     def test_method_increment(self, client: Ascerta) -> None:
         version = client.use_cases.definitions.version.increment(
             "use_case_name",
         )
-        assert_matches_type(UseCaseDefinitionResponse, version, path=['response'])
+        assert_matches_type(UseCaseDefinitionResponse, version, path=["response"])
 
     @parametrize
     def test_raw_response_increment(self, client: Ascerta) -> None:
-
         response = client.use_cases.definitions.version.with_raw_response.increment(
             "use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         version = response.parse()
-        assert_matches_type(UseCaseDefinitionResponse, version, path=['response'])
+        assert_matches_type(UseCaseDefinitionResponse, version, path=["response"])
 
     @parametrize
     def test_streaming_response_increment(self, client: Ascerta) -> None:
         with client.use_cases.definitions.version.with_streaming_response.increment(
             "use_case_name",
-        ) as response :
+        ) as response:
             assert not response.is_closed
-            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             version = response.parse()
-            assert_matches_type(UseCaseDefinitionResponse, version, path=['response'])
+            assert_matches_type(UseCaseDefinitionResponse, version, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_path_params_increment(self, client: Ascerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-          client.use_cases.definitions.version.with_raw_response.increment(
-              "",
-          )
-class TestAsyncVersion:
-    parametrize = pytest.mark.parametrize("async_client", [False, True, {'http_client': 'aiohttp'}], indirect=True, ids=['loose', 'strict', 'aiohttp'])
+            client.use_cases.definitions.version.with_raw_response.increment(
+                "",
+            )
 
+
+class TestAsyncVersion:
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
     @parametrize
     async def test_method_increment(self, async_client: AsyncAscerta) -> None:
         version = await async_client.use_cases.definitions.version.increment(
             "use_case_name",
         )
-        assert_matches_type(UseCaseDefinitionResponse, version, path=['response'])
+        assert_matches_type(UseCaseDefinitionResponse, version, path=["response"])
 
     @parametrize
     async def test_raw_response_increment(self, async_client: AsyncAscerta) -> None:
-
         response = await async_client.use_cases.definitions.version.with_raw_response.increment(
             "use_case_name",
         )
 
         assert response.is_closed is True
-        assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         version = await response.parse()
-        assert_matches_type(UseCaseDefinitionResponse, version, path=['response'])
+        assert_matches_type(UseCaseDefinitionResponse, version, path=["response"])
 
     @parametrize
     async def test_streaming_response_increment(self, async_client: AsyncAscerta) -> None:
         async with async_client.use_cases.definitions.version.with_streaming_response.increment(
             "use_case_name",
-        ) as response :
+        ) as response:
             assert not response.is_closed
-            assert response.http_request.headers.get('X-Stainless-Lang') == 'python'
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             version = await response.parse()
-            assert_matches_type(UseCaseDefinitionResponse, version, path=['response'])
+            assert_matches_type(UseCaseDefinitionResponse, version, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_path_params_increment(self, async_client: AsyncAscerta) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `use_case_name` but received ''"):
-          await async_client.use_cases.definitions.version.with_raw_response.increment(
-              "",
-          )
+            await async_client.use_cases.definitions.version.with_raw_response.increment(
+                "",
+            )
