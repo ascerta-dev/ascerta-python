@@ -17,7 +17,7 @@ The REST API documentation can be found on [docs.ascerta.com](https://docs.ascer
 
 ```sh
 # install from PyPI
-pip install ascerta
+pip install '--pre ascerta'
 ```
 
 ## Usage
@@ -79,7 +79,7 @@ You can enable this by installing `aiohttp`:
 
 ```sh
 # install from PyPI
-pip install ascerta[aiohttp]
+pip install '--pre ascerta[aiohttp]'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
