@@ -15,6 +15,9 @@ dependencies = [
   "anyio>=3.5.0, <5",
   "distro>=1.7.0, <2",
   "sniffio",
+  "wrapt>=1.17.2",
+  "tiktoken>=0.8.0",
+  "nest-asyncio>=1.6.0",
 ]
 
 requires-python = ">= 3.9"
