@@ -76,9 +76,6 @@ class Ascerta(SyncAPIClient):
 
         This automatically infers the `api_key` argument from the `ASCERTA_API_KEY` environment variable if it is not provided.
         """
-        # Support legacy Pay-i credentials and URLs without changing the process environment.
-        if api_key is None and not os.environ.get("ASCERTA_API_KEY"):
-            api_key = os.environ.get("PAYI_API_KEY") or None
         if api_key is None:
             api_key = os.environ.get("ASCERTA_API_KEY")
         if api_key is None:
@@ -87,9 +84,6 @@ class Ascerta(SyncAPIClient):
             )
         self.api_key = api_key
 
-        # Support legacy Pay-i credentials and URLs without changing the process environment.
-        if base_url is None and not os.environ.get("ASCERTA_BASE_URL"):
-            base_url = os.environ.get("PAYI_BASE_URL") or None
         if base_url is None:
             base_url = os.environ.get("ASCERTA_BASE_URL")
         if base_url is None:
@@ -293,9 +287,6 @@ class AsyncAscerta(AsyncAPIClient):
 
         This automatically infers the `api_key` argument from the `ASCERTA_API_KEY` environment variable if it is not provided.
         """
-        # Support legacy Pay-i credentials and URLs without changing the process environment.
-        if api_key is None and not os.environ.get("ASCERTA_API_KEY"):
-            api_key = os.environ.get("PAYI_API_KEY") or None
         if api_key is None:
             api_key = os.environ.get("ASCERTA_API_KEY")
         if api_key is None:
@@ -304,9 +295,6 @@ class AsyncAscerta(AsyncAPIClient):
             )
         self.api_key = api_key
 
-        # Support legacy Pay-i credentials and URLs without changing the process environment.
-        if base_url is None and not os.environ.get("ASCERTA_BASE_URL"):
-            base_url = os.environ.get("PAYI_BASE_URL") or None
         if base_url is None:
             base_url = os.environ.get("ASCERTA_BASE_URL")
         if base_url is None:
