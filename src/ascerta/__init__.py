@@ -28,6 +28,12 @@ from ._exceptions import (
 )
 from ._base_client import DefaultHttpxClient, DefaultAioHttpClient, DefaultAsyncHttpxClient
 from ._utils._logs import setup_logging as _setup_logging
+from .lib.instrument import (
+    track as track,
+    get_context as get_context,
+    track_context as track_context,
+    ascerta_instrument as ascerta_instrument,
+)
 
 __all__ = [
     "types",
@@ -63,6 +69,10 @@ __all__ = [
     "AsyncStream",
     "Ascerta",
     "AsyncAscerta",
+    "ascerta_instrument",
+    "track",
+    "track_context",
+    "get_context",
     "file_from_path",
     "BaseModel",
     "DEFAULT_TIMEOUT",

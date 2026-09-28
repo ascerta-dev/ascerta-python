@@ -44,6 +44,25 @@ we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
 to add `ASCERTA_API_KEY="My API Key"` to your `.env` file
 so that your API Key is not stored in source control.
 
+## Instrumentation
+
+Import the instrumentation entry point and tracking helpers directly from the package:
+
+```python
+from ascerta import ascerta_instrument, get_context, track, track_context
+
+ascerta_instrument()
+
+@track(use_case_name="answer-question")
+def answer_question():
+    ...
+
+with track_context(use_case_name="answer-question"):
+    context = get_context()
+```
+
+The existing imports of these functions from `ascerta.lib.instrument` remain supported.
+
 ## Async usage
 
 Simply import `AsyncAscerta` instead of `Ascerta` and use `await` with each API call:

@@ -34,7 +34,9 @@ jobs:
         run: |
           git remote add production \
             "https://x-access-token:${PRODUCTION_REPO_TOKEN}@github.com/${PRODUCTION_REPO}.git"
-          git fetch production main
+          # Checkout's staging-only auth header overrides the token in the URL.
+          # Clear it for this fetch; retain it for the later push to staging.
+          git -c http.https://github.com/.extraheader= fetch production main
 
       - name: Check whether production has content staging lacks
         id: diff
