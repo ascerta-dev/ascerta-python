@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-alpha.2](https://github.com/ascerta-dev/ascerta-python/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* workflow permissions ([e844de4](https://github.com/ascerta-dev/ascerta-python/commit/e844de4b53dd627fa57a63f89fd4bf5fc0e5b4c3))
+
 ## [0.1.0-alpha.1](https://github.com/ascerta-dev/ascerta-python/compare/v0.1.0-alpha.0...v0.1.0-alpha.1) (2026-09-28)
 
 
