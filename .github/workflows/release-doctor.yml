@@ -9,6 +9,8 @@ jobs:
   release_doctor:
     name: release doctor
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     if: github.repository == 'ascerta-dev/ascerta-python' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || startsWith(github.head_ref, 'release-please') || github.head_ref == 'next')
 
     steps:
