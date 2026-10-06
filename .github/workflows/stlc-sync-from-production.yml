@@ -29,6 +29,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          # The default GITHUB_TOKEN cannot write workflow files. The explicit
+          # token below is used for the back-sync push instead.
+          persist-credentials: false
 
       - name: Fetch production main
         run: |
@@ -55,7 +58,11 @@ jobs:
 
       - name: Push production main to the back-sync branch on staging
         if: steps.diff.outputs.behind == 'true'
-        run: git push origin production/main:refs/heads/stlc/from-prod --force
+        run: |
+          git push \
+            "https://x-access-token:${PRODUCTION_REPO_TOKEN}@github.com/${{ github.repository }}.git" \
+            production/main:refs/heads/stlc/from-prod \
+            --force
 
       - name: Open or update the back-sync PR on staging
         if: steps.diff.outputs.behind == 'true'
