@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.0-alpha.3](https://github.com/ascerta-dev/ascerta-python/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) (2026-10-07)
+
+
+### Bug Fixes
+
+* resolve package version conflict in uv lockfile ([#11](https://github.com/ascerta-dev/ascerta-python/issues/11)) ([fc6241f](https://github.com/ascerta-dev/ascerta-python/commit/fc6241fcf45e5615d94830261dd701cb3f48dce2))
+* use workflow-capable token for back-sync ([c152542](https://github.com/ascerta-dev/ascerta-python/commit/c152542198ee1eb3281bb81e979077b3f0721449))
+
 ## [0.1.0-alpha.2](https://github.com/ascerta-dev/ascerta-python/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) (2026-10-06)
 
 
