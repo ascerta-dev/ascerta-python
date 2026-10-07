@@ -199,11 +199,7 @@ wheels = [
 
 [[package]]
 name = "ascerta"
-<<<<<<< HEAD
 version = "0.1.0a2"
-=======
-version = "0.1.0a1"
->>>>>>> 230df2d (Apply custom code)
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
