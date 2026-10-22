@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Union, Optional
+from typing_extensions import override
 
 from wrapt import ObjectProxy  # type: ignore
 
@@ -13,6 +14,10 @@ from .ProviderRequest import _ChunkResult, _ProviderRequest
 if TYPE_CHECKING:
     from .instrument import _AscertaInstrumentor
 
+    _ObjectProxyBase = ObjectProxy[Any]
+else:
+    _ObjectProxyBase = ObjectProxy
+
 __all__ = [
     "_StreamIteratorWrapper",
     "_StreamManagerWrapper",
@@ -20,7 +25,7 @@ __all__ = [
 ]
 
 
-class _StreamIteratorWrapper(ObjectProxy):  # type: ignore
+class _StreamIteratorWrapper(_ObjectProxyBase):
     def __init__(
         self,
         response: Any,
@@ -59,22 +64,27 @@ class _StreamIteratorWrapper(ObjectProxy):  # type: ignore
         self._iter_started: bool = False
         self._log_prompt_and_response: bool = request._log_prompt_and_response
 
+    @override
     def __enter__(self) -> Any:
         self._instrumentor._logger.debug(f"StreamIteratorWrapper: __enter__")
         return self
 
+    @override
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self._instrumentor._logger.debug(f"StreamIteratorWrapper: __exit__")
         self.__wrapped__.__exit__(exc_type, exc_val, exc_tb)  # type: ignore
 
+    @override
     async def __aenter__(self) -> Any:
         self._instrumentor._logger.debug(f"StreamIteratorWrapper: __aenter__")
         return self
 
+    @override
     async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self._instrumentor._logger.debug(f"StreamIteratorWrapper: __aexit__")
         await self.__wrapped__.__aexit__(exc_type, exc_val, exc_tb)  # type: ignore
 
+    @override
     def __iter__(self) -> Any:
         self._iter_started = True
         if self._request.is_aws_client:
@@ -227,7 +237,7 @@ class _StreamIteratorWrapper(ObjectProxy):  # type: ignore
             return _compact_json(chunk)
 
 
-class _StreamManagerWrapper(ObjectProxy):  # type: ignore
+class _StreamManagerWrapper(_ObjectProxyBase):
     def __init__(
         self,
         stream_manager: Any,  # type: ignore
@@ -246,6 +256,7 @@ class _StreamManagerWrapper(ObjectProxy):  # type: ignore
         self._request: _ProviderRequest = request
         self._first_token: bool = True
 
+    @override
     def __enter__(self) -> Any:
         self._instrumentor._logger.debug(f"_StreamManagerWrapper: __enter__")
 
@@ -256,6 +267,7 @@ class _StreamManagerWrapper(ObjectProxy):  # type: ignore
         _set_attr_safe(stream, "_ascerta_request", self._request)
         return stream  # type: ignore
 
+    @override
     async def __aenter__(self) -> Any:
         self._instrumentor._logger.debug(f"_StreamManagerWrapper: __aenter__")
 

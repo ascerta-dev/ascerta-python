@@ -294,6 +294,7 @@ class _OpenAiProviderRequest(_ProviderRequest):
         self._output_tokens_key = output_tokens_key
         self._input_tokens_details_key = input_tokens_details_key
         self._output_tokens_details_key = output_tokens_details_key
+        self._prompt_cache_ttl: Optional[str] = None
 
         if hasattr(self._openai_client, "base_url"):
             try:
@@ -320,7 +321,32 @@ class _OpenAiProviderRequest(_ProviderRequest):
 
         self.apply_price_as(model)
 
+        self._prompt_cache_ttl = self.get_prompt_cache_ttl(kwargs) or self.get_prompt_cache_ttl(
+            kwargs.get("extra_body", None)
+        )
+
         return True
+
+    @staticmethod
+    def get_prompt_cache_ttl(payload: Any) -> Optional[str]:
+        if not isinstance(payload, dict):
+            return None
+
+        prompt_cache_options = cast("dict[str, Any]", payload).get("prompt_cache_options", None)
+        if not isinstance(prompt_cache_options, dict):
+            return None
+
+        ttl = cast("dict[str, Any]", prompt_cache_options).get("ttl", None)
+        return ttl if isinstance(ttl, str) else None
+
+    def cache_write_unit_type(self) -> str:
+        # The usage reports a single cache write total; the TTL defaults to 30m when not specified
+        ttl = self._prompt_cache_ttl or "30m"
+        if ttl == "30m":
+            return "text_cache_write_30m"
+        if ttl == "12h":
+            return "text_cache_write_12h"
+        return "text_cache_write"
 
     def apply_price_as(self, model: str) -> None:
         if self._price_as.resource_scope:
@@ -413,6 +439,9 @@ class _OpenAiProviderRequest(_ProviderRequest):
         if self.update_deployment_name() is False:
             self.update_model_name(response_dict.get("model", ""))
 
+        # The Responses API reports the prompt cache options applied to the response
+        self._prompt_cache_ttl = self.get_prompt_cache_ttl(response_dict) or self._prompt_cache_ttl
+
         self.add_usage_units(response_dict.get("usage", {}))
 
         if self._log_prompt_and_response:
@@ -439,9 +468,9 @@ class _OpenAiProviderRequest(_ProviderRequest):
             if input_cache != 0:
                 units["text_cache_read"] = IngestUnits(input=input_cache, output=0)
 
-            cached_write_tokens = prompt_tokens_details.get("cached_write_tokens", 0)
-            if cached_write_tokens != 0:
-                units["text_cache_write"] = IngestUnits(input=cached_write_tokens, output=0)
+            cache_write_tokens = prompt_tokens_details.get("cache_write_tokens", 0)
+            if cache_write_tokens:
+                units[self.cache_write_unit_type()] = IngestUnits(input=cache_write_tokens, output=0)
 
         output_tokens_details = usage.get(self._output_tokens_details_key, {})
         if output_tokens_details:
@@ -722,6 +751,7 @@ class _OpenAiResponsesProviderRequest(_OpenAiProviderRequest):
             if self.update_deployment_name() is False:
                 self.update_model_name(response.get("model", ""))
 
+            self._prompt_cache_ttl = self.get_prompt_cache_ttl(response) or self._prompt_cache_ttl
             self.add_usage_units(usage)
             ingest = True
 
