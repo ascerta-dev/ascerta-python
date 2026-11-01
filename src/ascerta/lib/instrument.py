@@ -10,11 +10,11 @@ import base64
 import asyncio
 import inspect
 import logging
-import threading
 import traceback
 from enum import Enum
 from typing import Any, Set, Union, Optional, Sequence, TypedDict, cast
 from datetime import datetime, timezone
+from contextvars import ContextVar
 
 import httpx
 import nest_asyncio  # type: ignore
@@ -156,17 +156,6 @@ class _IsStreaming(Enum):
     kwargs = 2
 
 
-class _ThreadLocalContextStorage(threading.local):
-    """
-    Thread-local storage for context stacks. Each thread gets its own context stack.
-
-    Note: We don't use __init__ because threading.local's __init__ semantics are tricky.
-    Instead, we lazily initialize the context_stack attribute in the property accessor.
-    """
-
-    context_stack: "list[_Context]"
-
-
 class _InternalTrackContext:
     def __init__(
         self,
@@ -208,8 +197,8 @@ class _AscertaInstrumentor:
         self._ascerta: Optional[Ascerta] = ascerta
         self._aascerta: Optional[AsyncAscerta] = aascerta
 
-        # Thread-local storage for context stacks - each thread gets its own stack
-        self._thread_local_storage = _ThreadLocalContextStorage()
+        # Publish new stacks and frames so inherited task contexts can safely share them.
+        self._context_stack_var: ContextVar[tuple[_Context, ...]] = ContextVar("ascerta_context_stack", default=())
 
         self._log_prompt_and_response: bool = log_prompt_and_response
 
@@ -228,7 +217,9 @@ class _AscertaInstrumentor:
 
         self._instrument_inline_data: bool = global_config.get("instrument_inline_data", False)
 
-        self._last_result: Optional[Union[XproxyResult, XproxyError]] = None
+        self._last_result_var: ContextVar[Optional[Union[XproxyResult, XproxyError]]] = ContextVar(
+            "ascerta_last_result", default=None
+        )
 
         self._offline_instrumentation = global_config.pop("offline_instrumentation", None)
         self._offline_ingest_packets: list[IngestUnitsParams] = []
@@ -346,31 +337,15 @@ class _AscertaInstrumentor:
             self._aascerta = AsyncAscerta()
 
     def _instrument_futures(self) -> None:
-        """Install hooks for all common concurrent execution patterns."""
+        """Propagate SDK state to executors; asyncio inherits ContextVars natively."""
 
         def _thread_submit_wrapper(wrapped: Any, instance: Any, args: Any, kwargs: Any) -> Any:
             return self._thread_submit_wrapper(wrapped, instance, args, kwargs)
-
-        def _create_task_wrapper(wrapped: Any, instance: Any, args: Any, kwargs: Any) -> Any:
-            return self._create_task_wrapper(wrapped, instance, args, kwargs)
-
-        def _gather_wrapper(wrapped: Any, instance: Any, args: Any, kwargs: Any) -> Any:
-            return self._gather_wrapper(wrapped, instance, args, kwargs)
 
         try:
             wrap_function_wrapper("concurrent.futures", "ThreadPoolExecutor.submit", _thread_submit_wrapper)
         except Exception as e:
             self._logger.debug(f"Failed to wrap ThreadPoolExecutor.submit: {e}")
-
-        try:
-            wrap_function_wrapper("asyncio", "create_task", _create_task_wrapper)
-        except Exception as e:
-            self._logger.debug(f"Failed to wrap asyncio.create_task: {e}")
-
-        try:
-            wrap_function_wrapper("asyncio", "gather", _gather_wrapper)
-        except Exception as e:
-            self._logger.debug(f"Failed to wrap asyncio.create_task: {e}")
 
     def _instrument_all(self) -> None:
         self._instrument_openai()
@@ -479,100 +454,20 @@ class _AscertaInstrumentor:
         if len(args) > 0:
             fn = args[0]
             fn_args = args[1:]
-            captured_context = copy.deepcopy(self._context_safe)
+            captured_stack = self._context_stack
+            captured_result = self._last_result_var.get()
 
             def context_wrapper(*inner_args: Any, **inner_kwargs: Any) -> Any:
-                with self:
-                    # self._context_stack[-1].update(captured_context)
-                    self._init_current_context(**captured_context)
+                stack_token = self._context_stack_var.set(captured_stack)
+                result_token = self._last_result_var.set(captured_result)
+                try:
                     return fn(*inner_args, **inner_kwargs)
+                finally:
+                    self._last_result_var.reset(result_token)
+                    self._context_stack_var.reset(stack_token)
 
             return wrapped(context_wrapper, *fn_args, **kwargs)
         return wrapped(*args, **kwargs)
-
-    def _create_task_wrapper(
-        self,
-        wrapped: Any,
-        _instance: Any,
-        args: Any,
-        kwargs: Any,
-    ) -> Any:
-        # Handle different create_task signatures across Python versions:
-        # Python 3.7-3.10: create_task(coro, *, name=None)
-        # Python 3.11+: create_task(coro, *, name=None, context=None)
-
-        if len(args) > 0:
-            coro = args[0]
-
-            # Only wrap if it's actually a coroutine object
-            if inspect.iscoroutine(coro):
-                # Capture the current context before the task is created
-                captured_context = copy.deepcopy(self._context_safe)
-
-                async def context_preserving_wrapper() -> Any:
-                    # Set up the context in the new task
-                    with self:
-                        self._init_current_context(**captured_context)
-                        # Await the original coroutine
-                        return await coro
-
-                # Create a new coroutine with context preservation
-                wrapped_coro = context_preserving_wrapper()
-
-                # Replace the first argument with our wrapped coroutine
-                new_args = (wrapped_coro,) + args[1:]
-
-                # Call the original create_task with the wrapped coroutine
-                # This works for both Python 3.7-3.10 and 3.11+ because we're
-                # passing through all other args and kwargs unchanged
-                return wrapped(*new_args, **kwargs)
-
-        # If not a coroutine or no args, pass through unchanged
-        return wrapped(*args, **kwargs)
-
-    def _gather_wrapper(
-        self,
-        wrapped: Any,
-        _instance: Any,
-        args: Any,
-        kwargs: Any,
-    ) -> Any:
-        # Handle asyncio.gather which accepts *coros_or_futures
-        # Signature across Python versions:
-        # Python 3.7-3.9: gather(*coros_or_futures, loop=None, return_exceptions=False)
-        # Python 3.10+: gather(*coros_or_futures, return_exceptions=False) - loop deprecated
-        # Python 3.12+: gather(*coros_or_futures, return_exceptions=False) - loop removed
-
-        if not args:
-            # No coroutines/futures passed, call original
-            return wrapped(*args, **kwargs)
-
-        # Capture the current context before wrapping
-        captured_context = copy.deepcopy(self._context_safe)
-
-        # Wrap each coroutine with context preservation
-        wrapped_coros: list[Any] = []
-
-        for coro_or_future in args:
-            if inspect.iscoroutine(coro_or_future):
-                # Create a wrapper coroutine that preserves context
-                # We need to capture coro_or_future in a closure properly
-                async def context_preserving_wrapper(
-                    coro: Any = coro_or_future, ctx: _Context = captured_context
-                ) -> Any:
-                    with self:
-                        self._init_current_context(**ctx)
-                        return await coro
-
-                wrapped_coros.append(context_preserving_wrapper())
-            else:
-                # Futures, Tasks, or other awaitables - pass through unchanged
-                # They already have their execution context bound
-                wrapped_coros.append(coro_or_future)
-
-        # Call the original gather with wrapped coroutines
-        # Pass through all kwargs (return_exceptions, and loop for older Python versions)
-        return wrapped(*wrapped_coros, **kwargs)
 
     def _write_offline_ingest_packets(self) -> None:
         if not self._offline_instrumentation_file_name or not self._offline_ingest_packets:
@@ -955,18 +850,8 @@ class _AscertaInstrumentor:
         return self.set_xproxy_result(self._ingest_units_worker(request))
 
     @property
-    def _context_stack(self) -> "list[_Context]":
-        """
-        Get the thread-local context stack. On first access per thread,
-        initializes with the current state of the main thread's context stack.
-        """
-        # Lazy-initialize the context_stack for this thread if it doesn't exist
-        if not hasattr(self._thread_local_storage, "context_stack"):
-            self._thread_local_storage.context_stack = []
-
-        stack = self._thread_local_storage.context_stack
-
-        return stack
+    def _context_stack(self) -> tuple[_Context, ...]:
+        return self._context_stack_var.get()
 
     def _setup_call_func(self) -> _Context:
         if len(self._context_stack) > 0:
@@ -1019,8 +904,8 @@ class _AscertaInstrumentor:
         price_as_resource: Optional[str] = None,
         resource_scope: Optional[str] = None,
     ) -> None:
-        # there will always be a current context
-        context: _Context = self._context  # type: ignore
+        # Never mutate a frame that an inherited task context may still reference.
+        context: _Context = {}
         parent_context: _Context = self._context_stack[-2] if len(self._context_stack) > 1 else {}
 
         parent_proxy = parent_context.get("proxy", self._proxy_default)
@@ -1078,7 +963,7 @@ class _AscertaInstrumentor:
         parent_limit_ids = parent_context.get("limit_ids", None)
         if limit_ids is None:
             # use the parent limit_ids if it exists
-            context["limit_ids"] = parent_limit_ids
+            context["limit_ids"] = parent_limit_ids.copy() if parent_limit_ids else None
         elif len(limit_ids) == 0:
             # caller passing an empty array explicitly blocks inheriting from the parent state
             context["limit_ids"] = None
@@ -1111,6 +996,7 @@ class _AscertaInstrumentor:
 
         parent_resource_scope = parent_context.get("resource_scope", None)
         context["resource_scope"] = self._valid_str_or_none(value=resource_scope, default=parent_resource_scope)
+        self._context_stack_var.set(self._context_stack[:-1] + (context,))
 
     async def _acall_func(
         self,
@@ -1175,14 +1061,11 @@ class _AscertaInstrumentor:
             return func(*args, **kwargs)
 
     def __enter__(self) -> Any:
-        # Push a new context dictionary onto the thread-local stack
-        self._context_stack.append({})
+        self._context_stack_var.set(self._context_stack + ({},))
         return self
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
-        # Pop the current context off the thread-local stack
-        if self._context_stack:
-            self._context_stack.pop()
+        self._context_stack_var.set(self._context_stack[:-1])
 
     @property
     def _context(self) -> Optional[_Context]:
@@ -1556,7 +1439,7 @@ class _AscertaInstrumentor:
     def set_xproxy_result(
         self, response: Optional[Union[XproxyResult, XproxyError]]
     ) -> Optional[Union[XproxyResult, XproxyError]]:
-        self._last_result = response
+        self._last_result_var.set(response)
         return response
 
     def _update_extra_headers(
@@ -1900,7 +1783,8 @@ def track_context(
 
 def get_context() -> AscertaContext:
     """
-    Returns the current tracking context from calls to @track and with track_context().
+    Returns a detached snapshot of the current tracking context.
+    Tasks inherit metadata through their native context; nested scopes stay local.
     If no context is active, returns an empty context.
     """
     if not _instrumentor:
@@ -1912,6 +1796,7 @@ def get_context() -> AscertaContext:
         for key, value in internal_context.items()
         if key in AscertaContext.__annotations__ and value is not None
     }
-    if _instrumentor._last_result:
-        context_dict["last_result"] = _instrumentor._last_result
-    return AscertaContext(**dict(context_dict))  # type: ignore
+    last_result = _instrumentor._last_result_var.get()
+    if last_result:
+        context_dict["last_result"] = last_result
+    return AscertaContext(**copy.deepcopy(context_dict))  # type: ignore
